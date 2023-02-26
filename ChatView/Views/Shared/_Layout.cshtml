@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ChatView</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ChatView.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <ul class="nav-bar page">
+            <li class="nav-bar__item">
+                <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+            </li>
+            <li class="nav-bar__item">
+                <a asp-area="" asp-controller="Profile" asp-action="Index">Profile</a>
+            </li>
+            <li class="nav-bar__item">
+                <a asp-area="" asp-controller="Contact" asp-action="Index">Contact</a>
+            </li>
+        </ul>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+</body>
+</html>
