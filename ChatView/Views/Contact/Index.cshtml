@@ -5,6 +5,10 @@
     ViewData["Title"] = "Contact";
 }
 
+<head>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</head>
+
 <div class="contact">
     <h2 class="contact__info">
         Als je me wilt contacteren kan dat via het onderstaande formulier!</h2>
@@ -20,6 +24,8 @@
         <label asp-for="Message">Message</label> <br />
         <span asp-validation-for="Message"></span> <br />
         <textarea type="text" name="Message" id="Message" maxlength="600"></textarea> <br /> <br />
+         
+        <div class="g-recaptcha" data-sitekey="6LfnNYokAAAAAP9rHM6dt1gl81VbnLPRzTnDzhRA"></div> <br />
 
         <input class="button" type="submit" value="Verstuur"/>
     </form>

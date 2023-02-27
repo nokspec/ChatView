@@ -13,5 +13,6 @@ namespace ChatView.Models.Contact
         [Required(ErrorMessage = "Please enter your message")]
         public string Message { get; set; }
 
+        public string CaptchaToken { get; set; }
     }
 }
