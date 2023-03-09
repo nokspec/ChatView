@@ -43,6 +43,19 @@ body {
             background-color: #111;
         }
 
+.urlbox {
+    width: 50%;
+    padding: 12px 20px;
+    box-sizing: border-box;
+    border-radius: 4px;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    outline: none;
+    display: block;
+    margin: 0 auto;
+}
+
+
 video {
     display: block;
     width: 1280px;

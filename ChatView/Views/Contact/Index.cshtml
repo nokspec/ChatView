@@ -16,15 +16,15 @@
     <form asp-controller="Contact" asp-action="Create" method="post">
         <label asp-for="Topic">Onderwerp</label>
         <span asp-validation-for="Topic"></span> <br />
-        <input type="text" id="Topic" name="Topic" /> <br /><br />
+        <input type="text" id="Topic" name="Topic" placeholder="Topic"/> <br /><br />
 
         <label asp-for="Email">E-mail adres</label>
         <span asp-validation-for="Email"></span> <br />
-        <input type="text" id="Email" name="Email" />  <br /><br />
+        <input type="text" id="Email" name="Email" placeholder="youremail@email.com"/>  <br /><br />
 
         <label asp-for="Message">Bericht</label>
         <span asp-validation-for="Message"></span> <br />
-        <textarea type="text" name="Message" id="Message" maxlength="600"></textarea> <br /> <br />
+        <textarea type="text" name="Message" id="Message" maxlength="600" placeholder="Message"></textarea> <br /> <br />
 
         <div class="g-recaptcha" data-sitekey="6LfnNYokAAAAAP9rHM6dt1gl81VbnLPRzTnDzhRA"></div> <br />
 

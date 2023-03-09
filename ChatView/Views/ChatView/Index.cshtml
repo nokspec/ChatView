@@ -4,6 +4,12 @@
 @{
 }
 
+<div class="urlbox">
+    <form asp-controller="ChatView" asp-action="DownloadVideo" method="post" autocomplete="off">
+        <input type="text" id="URL" name="URL" placeholder="Youtube URL"/> <br /><br />
+    </form>
+</div>
+
 <section class="video-player">
     <div class="video-container">
         <video id="myvideo" controls>
