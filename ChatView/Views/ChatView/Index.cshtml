@@ -4,6 +4,9 @@
 @{
 }
 
+<script src="~/js/video.js" defer></script>
+
+
 <div class="urlbox">
     <form asp-controller="ChatView" asp-action="DownloadVideo" method="post" autocomplete="off">
         <input type="text" id="URL" name="URL" placeholder="Youtube URL"/> <br /><br />
@@ -12,11 +15,11 @@
 
 <section class="video-player">
     <div class="video-container">
-        <video id="myvideo" controls>
+        <video id="videoplayer" controls>
             <source src="~/videos/myvideo.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
-        @*<p>Current time: <span id="current-time"></span></p>*@
+        <p>Current time: <span id="current-time"></span></p>
     </div>
 
 </section>
