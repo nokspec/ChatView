@@ -21,3 +21,4 @@ video.addEventListener('ended', () => {
 video.addEventListener('seeked', () => {
     console.log('The video has been seeked to a new position.');
 });
+

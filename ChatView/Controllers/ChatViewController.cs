@@ -36,7 +36,16 @@ namespace ChatView.Controllers
                     var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
                     var response = await _httpClient.PostAsync(apiUrl, content);
 
-                    if (response.IsSuccessStatusCode) return View("Index");
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var videoUrl = await response.Content.ReadAsStringAsync();
+                        var videoUrlTrimmed = String.Concat(videoUrl.Where(c => !Char.IsWhiteSpace(c)));
+
+                        ViewData["VideoUrl"] = videoUrlTrimmed;
+
+                        return View("Index");
+                    }
+
                     return View("Index");
                 }
             }
