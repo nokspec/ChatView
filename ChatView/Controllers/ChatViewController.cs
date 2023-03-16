@@ -45,7 +45,6 @@ namespace ChatView.Controllers
 
                         return View("Index");
                     }
-
                     return View("Index");
                 }
             }
