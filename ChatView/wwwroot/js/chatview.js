@@ -24,6 +24,8 @@ videoPlayer.addEventListener("play", function () {
 	// Send the play event to the hub
 	console.log("play");
 	connection.invoke('Play');
+	connection.invoke("TimeUpdate", videoPlayer.currentTime);
+
 });
 
 // Handle the pause event from the video player
@@ -32,6 +34,8 @@ videoPlayer.addEventListener("pause", function () {
 	if (videoPlayer.play) {
 		console.log("pause")
 		connection.invoke('Pause');
+		connection.invoke("TimeUpdate", videoPlayer.currentTime);
+
 	}
 });
 
@@ -41,17 +45,13 @@ connection.on('UpdatePlayState', function (isPlaying) {
 	if (videoPlayer.paused && isPlaying) {
 		console.log("play")
 		videoPlayer.play();
+		//connection.invoke("TimeUpdate", videoPlayer.currentTime);
 	}
 	else if (!videoPlayer.paused && !isPlaying) {
 		console.log("pause")
 		videoPlayer.pause();
+		//connection.invoke("TimeUpdate", videoPlayer.currentTime);
 	}
-});
-
-// Handle the timeupdate event from the video player
-videoPlayer.addEventListener("timeupdate", function () {
-	// Send the current time to the hub
-	connection.invoke("TimeUpdate", videoPlayer.currentTime);
 });
 
 // Handle the UpdateTime event from the hub
@@ -66,6 +66,5 @@ videoPlayer.addEventListener('seeked', function () {
 	console.log("seeked");
 	// Send the seek event to the hub
 	connection.invoke('Seek', videoPlayer.currentTime);
+	connection.invoke("TimeUpdate", videoPlayer.currentTime);
 });
-
-

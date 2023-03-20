@@ -28,7 +28,7 @@ namespace ChatView.Hubs
         public void TimeUpdate(double time)
         {
             // Update the current time and broadcast it to all clients
-            if (time >= (currentTime + 30)) //sync every 30 seconds TODO: optimize solution
+            if (time != currentTime) //sync every 30 seconds TODO: optimize solution
             {
                 currentTime = time;
                 Clients.All.SendAsync("UpdateTime", currentTime);
@@ -52,7 +52,7 @@ namespace ChatView.Hubs
             if (time != currentTime)
             {
                 currentTime = time;
-                Clients.All.SendAsync("UpdateSeek", currentTime);
+                Clients.All.SendAsync("UpdateTime", currentTime);
             }
         }
     }
