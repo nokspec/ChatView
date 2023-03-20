@@ -6,8 +6,9 @@
     <title>@ViewData["Title"] - ChatView</title>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ChatView.styles.css" asp-append-version="true" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 </head>
 <body>
     <header>
@@ -24,6 +25,13 @@
             <li class="nav-bar__item">
                 <a asp-area="" asp-controller="Contact" asp-action="Index">Contact</a>
             </li>
+            @if (User.IsInRole("Administrator"))
+            {
+                <li class="nav-bar__item">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Admin">Admin</a>
+                </li>
+            }
+            <partial name="_LoginPartial" />
         </ul>
     </header>
     <div class="container">
@@ -32,5 +40,14 @@
             @RenderBody()
         </main>
     </div>
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            <a>&copy; 2023 - ChatView</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -5,12 +5,12 @@
     string videoUrl = (string)ViewData["VideoUrl"];
 }
 
-<script src="~/js/video.js" defer></script>
-
+<script src="~/js/chatview.js" defer></script>
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
 
 <div class="urlbox">
     <form asp-controller="ChatView" asp-action="DownloadVideo" method="post" autocomplete="off">
-        <input type="text" id="URL" name="URL" placeholder="Youtube URL"/> <br /><br />
+        <input type="text" id="URL" name="URL" placeholder="Youtube URL" /> <br /><br />
     </form>
 </div>
 
@@ -20,7 +20,7 @@
             <source src=@videoUrl type="video/mp4">
             Your browser does not support the video tag.
         </video>
-        <p>Current time: <span id="current-time"></span></p>
     </div>
 
+    <span style="display: none" id="videoUrl" src="@videoUrl"></span>
 </section>

@@ -37,7 +37,7 @@ namespace ChatView.Controllers
             var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync(apiUrl, content);
 
-            if (response.IsSuccessStatusCode) return View("Success"); //if the response from the API is 200, return success view
+            if (response.IsSuccessStatusCode) return View("Success");
             return View("Error");
         }
     }

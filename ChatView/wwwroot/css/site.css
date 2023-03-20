@@ -43,6 +43,25 @@ body {
             background-color: #111;
         }
 
+.nav-bar__item-identity {
+    float: right;
+    list-style: none;
+}
+
+    .nav-bar__item-identity a {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        border-right: 1px solid #bbb;
+    }
+
+        .nav-bar__item-identity a:hover {
+            background-color: #111;
+        }
+
+/*chatview*/
 .urlbox {
     width: 50%;
     padding: 12px 20px;
@@ -58,8 +77,8 @@ body {
 
 video {
     display: block;
-    width: 1280px;
-    height: 720px;
+    width: 960px;
+    height: 540px;
     margin: 0 auto;
 }
 
@@ -67,10 +86,10 @@ video {
     box-shadow: 0px 0px 15px rgba(0, 0, 0, 1);
     position: absolute;
     top: 50%;
-    left: 40%;
+    left: 30%;
     transform: translate(-50%, -50%);
-    width: 1280px;
-    height: 720px;
+    width: 960px;
+    height: 540px;
 }
 
 #play-button {
@@ -112,6 +131,23 @@ input[type="range"] {
         border: 2px solid #ddd;
         cursor: pointer;
     }
+/**/
+
+.login-container {
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 15px;
+    background: #333333;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 1);
+    padding: 15px;
+    color: white;
+    width: 450px;
+}
 
 .contact-container {
     flex-direction: column;
@@ -169,6 +205,22 @@ input[type=email] {
         border: 2px solid #555;
     }
 
+input[type=password] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    outline: none;
+}
+
+    input[type=password]:focus {
+        border: 2px solid #555;
+    }
+
 textarea {
     width: 100%;
     height: 150px;
@@ -183,6 +235,7 @@ textarea {
 }
 
 .button {
+    color: black;
     background-color: white;
     padding: 15px 32px;
     text-align: center;
@@ -195,6 +248,27 @@ textarea {
 }
 
     .button:hover {
+        background-color: #1e1e1e;
+        color: white;
+    }
+
+.button-logout {
+    color: black;
+    background-color: white;
+    padding: 5px 5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    transition-duration: 0.4s;
+    border: 2px solid #1e1e1e;
+    border-radius: 15px;
+    width: 70px;
+    height: 40px;
+    margin: 2px;
+}
+
+    .button-logout:hover {
         background-color: #1e1e1e;
         color: white;
     }
@@ -416,5 +490,3 @@ textarea {
         flex-wrap: wrap;
     }
 }
-
-
