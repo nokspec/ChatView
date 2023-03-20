@@ -8,6 +8,11 @@ namespace ChatView.Hubs
         private static bool isPlaying = false;
         private static double currentTime = 0;
 
+        public void SetVideo(string url)
+        {
+            Clients.All.SendAsync("SetVideo", url);
+        }
+
         // Handle the play event from a client
         public void Play()
         {
@@ -28,7 +33,7 @@ namespace ChatView.Hubs
         public void TimeUpdate(double time)
         {
             // Update the current time and broadcast it to all clients
-            if (time != currentTime) //sync every 30 seconds TODO: optimize solution
+            if (time != currentTime)
             {
                 currentTime = time;
                 Clients.All.SendAsync("UpdateTime", currentTime);

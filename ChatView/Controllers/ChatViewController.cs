@@ -41,15 +41,14 @@ namespace ChatView.Controllers
                         var videoUrl = await response.Content.ReadAsStringAsync();
                         var videoUrlTrimmed = String.Concat(videoUrl.Where(c => !Char.IsWhiteSpace(c)));
 
-                        ViewData["VideoUrl"] = videoUrlTrimmed;
-
-                        return View("Index");
+                        return Json(videoUrlTrimmed); // Return the video URL as JSON
                     }
                     return View("Index");
                 }
             }
             return View("Index");
         }
+
 
         private static bool IsValidURL(string url)
         {

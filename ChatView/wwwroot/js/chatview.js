@@ -1,16 +1,44 @@
-﻿const videoPlayer = document.getElementById('videoplayer');
+﻿$(document).ready(function () {
+	$('#videoForm').submit(function () {
+		$('.urlbox').addClass('loading'); // add 'loading' class to the parent div
+		$('.spinner').show(); // show the spinner
+	});
+});
+
+document.getElementById('videoplayer').addEventListener('loadedmetadata', function () {
+	document.querySelector('.urlbox').classList.remove('loading');
+});
+
+document.getElementById('videoplayer').addEventListener('loadedmetadata', function () {
+	document.querySelector('.urlbox').classList.remove('loading');
+	document.getElementById('videoForm').reset();
+});
+
+$(document).ready(function () {
+	// Handle the form submission
+	$('#videoForm').submit(function (event) {
+		event.preventDefault(); // Prevent the default form submission
+		var url = $('#URL').val(); // Get the URL from the input field
+		$.ajax({
+			url: '/ChatView/DownloadVideo',
+			type: 'POST',
+			data: { url: url },
+			success: function (data) {
+				$('#videoSource').attr('src', data); // Update the video source with the new URL
+				connection.invoke('SetVideo', data); //Set the URL for all clients
+				$('#videoplayer').get(0).load(); // Reload the video player
+			},
+			error: function (xhr, status, error) {
+				console.log(error); // Log any errors to the console
+			}
+		});
+	});
+});
+
+//video playback
+const videoPlayer = document.getElementById('videoplayer');
 const currentTimeSpan = document.getElementById('current-time');
 
-var videoUrlElem = document.getElementById("videoUrl");
-if (videoUrlElem != null) {
-	var videoUrl = document.getElementById("videoUrl").getAttribute('src');
-	console.log(videoUrl);
-}
-else {
-	console.log("No video loaded");
-}
-
-// Create a new SignalR connection
 const connection = new signalR.HubConnectionBuilder()
 	.withUrl("/videohub")
 	.configureLogging(signalR.LogLevel.Information)
@@ -19,13 +47,19 @@ const connection = new signalR.HubConnectionBuilder()
 // Start the connection to the hub
 connection.start().catch(err => console.error(err.toString()));
 
+connection.on('SetVideo', function (url) {
+	console.log("URL set");
+	console.log(url);
+	$('#videoSource').attr('src', url); // Update the video source with the new URL
+	$('#videoplayer').get(0).load(); // Reload the video player
+})
+
 // Handle the play event from the video player
 videoPlayer.addEventListener("play", function () {
 	// Send the play event to the hub
 	console.log("play");
 	connection.invoke('Play');
 	connection.invoke("TimeUpdate", videoPlayer.currentTime);
-
 });
 
 // Handle the pause event from the video player
@@ -35,7 +69,6 @@ videoPlayer.addEventListener("pause", function () {
 		console.log("pause")
 		connection.invoke('Pause');
 		connection.invoke("TimeUpdate", videoPlayer.currentTime);
-
 	}
 });
 
@@ -45,12 +78,10 @@ connection.on('UpdatePlayState', function (isPlaying) {
 	if (videoPlayer.paused && isPlaying) {
 		console.log("play")
 		videoPlayer.play();
-		//connection.invoke("TimeUpdate", videoPlayer.currentTime);
 	}
 	else if (!videoPlayer.paused && !isPlaying) {
 		console.log("pause")
 		videoPlayer.pause();
-		//connection.invoke("TimeUpdate", videoPlayer.currentTime);
 	}
 });
 

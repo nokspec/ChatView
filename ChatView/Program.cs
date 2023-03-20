@@ -13,7 +13,10 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
-builder.Services.AddSignalR();
+builder.Services.AddSignalR(options =>
+{
+    options.MaximumReceiveMessageSize = 1024 * 1024 * 100; // 100 MB
+});
 
 builder.Services.Configure<CookiePolicyOptions>(options =>
 {
@@ -46,5 +49,6 @@ app.MapControllerRoute(
 
 app.MapRazorPages();
 app.MapHub<VideoHub>("/videohub");
+app.MapHub<ChatHub>("/chathub");
 
-app.Run();  
+app.Run();
