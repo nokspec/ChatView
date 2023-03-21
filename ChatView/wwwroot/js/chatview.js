@@ -2,8 +2,9 @@
 	constructor() {
 		this.videoPlayer = document.getElementById('videoplayer');
 		this.currentTimeSpan = document.getElementById('current-time');
+
 		this.connection = new signalR.HubConnectionBuilder()
-			.withUrl("/videohub")
+			.withUrl("/chatviewhub")
 			.configureLogging(signalR.LogLevel.Information)
 			.build(); //Create a connection
 		this.connection.start().catch(err => console.error(err.toString())); //Start the connection

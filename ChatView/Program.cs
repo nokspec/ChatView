@@ -48,7 +48,6 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapRazorPages();
-app.MapHub<ChatViewHub>("/videohub");
-app.MapHub<ChatHub>("/chathub");
+app.MapHub<ChatViewHub>("/chatviewhub");
 
 app.Run();
