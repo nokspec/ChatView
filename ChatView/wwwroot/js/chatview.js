@@ -7,12 +7,15 @@
 			.withUrl("/chatviewhub")
 			.configureLogging(signalR.LogLevel.Information)
 			.build(); //Create a connection
-		this.connection.start().catch(err => console.error(err.toString())); //Start the connection
+		this.connection.start().then(function () {
+			document.getElementById("sendButton").disabled = false;
+		}).catch(err => console.error(err.toString())); //Start the connection
 
 		this.bindEvents();
 		this.bindSignalREvents();
 		this.bindFormSubmit();
 		this.resetForm();
+		this.chatButton();
 	}
 
 	bindEvents() {
@@ -68,6 +71,15 @@
 		this.connection.on('UpdateTime', (currentTime) => {
 			this.updateTime(currentTime);
 		});
+
+		this.connection.on("ReceiveMessage", function (user, message) {
+			var li = document.createElement("li");
+			document.getElementById("messagesList").appendChild(li);
+			// We can assign user-supplied strings to an element's textContent because it
+			// is not interpreted as markup. If you're assigning in any other way, you 
+			// should be aware of possible script injection concerns.
+			li.textContent = `${user}: ${message}`;
+		});
 	}
 
 	bindFormSubmit() {
@@ -79,7 +91,7 @@
 		});
 	}
 
-	//misschien later nog vervangen met queryselector omdat jquery voor extra overhead zorgt en we het maar 2x gebruiken
+	//TODO: misschien later nog vervangen met queryselector omdat jquery voor extra overhead zorgt en we het maar 2x gebruiken
 	fetchVideo(url) {
 		$('.urlbox').addClass('loading');
 		$('.spinner').show();
@@ -105,6 +117,17 @@
 		videoPlayer.addEventListener('loadedmetadata', () => {
 			document.querySelector('.urlbox').classList.remove('loading');
 			document.getElementById('videoForm').reset();
+		});
+	}
+
+	chatButton() {
+		document.getElementById("sendButton").addEventListener("click", (event) => {
+			var user = document.getElementById("userInput").value;
+			var message = document.getElementById("messageInput").value;
+			this.connection.invoke("SendMessage", user, message).catch(function (err) {
+				return console.error(err.toString());
+			});
+			event.preventDefault();
 		});
 	}
 }

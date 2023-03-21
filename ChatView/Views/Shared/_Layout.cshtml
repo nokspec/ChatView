@@ -16,21 +16,17 @@
             <li class="nav-bar__item">
                 <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
             </li>
-            <li class="nav-bar__item">
-                <a asp-area="" asp-controller="ChatView" asp-action="Index">ChatView</a>
-            </li>
+            @*@if(User.IsInRole("Admin")) {*@
+                <li class="nav-bar__item">
+                    <a asp-area="" asp-controller="ChatView" asp-action="Index">ChatView</a>
+                </li>
+            @*}*@
             <li class="nav-bar__item">
                 <a asp-area="" asp-controller="Profile" asp-action="Index">Profile</a>
             </li>
             <li class="nav-bar__item">
                 <a asp-area="" asp-controller="Contact" asp-action="Index">Contact</a>
             </li>
-            @if (User.IsInRole("ADMIN"))
-            {
-                <li class="nav-bar__item">
-                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Admin">Admin</a>
-                </li>
-            }
             <partial name="_LoginPartial" />
         </ul>
     </header>
