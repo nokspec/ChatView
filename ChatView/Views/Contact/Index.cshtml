@@ -5,9 +5,8 @@
     ViewData["Title"] = "Contact";
 }
 
-<head>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-</head>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<link rel="stylesheet" href="~/css/contact.css" asp-append-version="true" />
 
 <div class="contact-container">
     <h2 class="contact__info">
@@ -16,11 +15,11 @@
     <form asp-controller="Contact" asp-action="Create" method="post">
         <label asp-for="Topic">Onderwerp</label>
         <span asp-validation-for="Topic"></span> <br />
-        <input type="text" id="Topic" name="Topic" placeholder="Topic"/> <br /><br />
+        <input type="text" id="Topic" name="Topic" placeholder="Topic" /> <br /><br />
 
         <label asp-for="Email">E-mail adres</label>
         <span asp-validation-for="Email"></span> <br />
-        <input type="text" id="Email" name="Email" placeholder="youremail@email.com"/>  <br /><br />
+        <input type="text" id="Email" name="Email" placeholder="youremail@email.com" />  <br /><br />
 
         <label asp-for="Message">Bericht</label>
         <span asp-validation-for="Message"></span> <br />

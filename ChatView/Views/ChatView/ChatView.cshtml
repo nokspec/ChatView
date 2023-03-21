@@ -1,0 +1,66 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@@{
+    ViewData["Title"] = "Chat Room";
+}
+<script src="~/js/chatview.js" defer></script>
+<script src="~/js/chathub.js" defer></script>
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<link rel="stylesheet" href="~/css/chatview.css" asp-append-version="true" />
+
+<div>
+    <h1>Chat Room @ViewData["RoomId"]</h1>
+</div>
+
+<asp:UpdatePanel ID="urlUpdatePanel" runat="server">
+    <ContentTemplate>
+        <div class="urlbox">
+            <form id="videoForm" method="post" autocomplete="off">
+                <div class="url-container">
+                    <input type="text" id="URL" name="URL" placeholder="Youtube URL" />
+                    <input type="submit" value="Submit" class="button-urlbox" />
+                    <div class="spinner"></div>
+                </div>
+            </form>
+        </div>
+    </ContentTemplate>
+</asp:UpdatePanel>
+
+<section class="video-player">
+    <div class="video-container">
+        <video id="videoplayer" controls>
+            <source id="videoSource" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+</section>
+
+<section class="chatbox">
+    <div class="chatbox-container">
+        <div class="container">
+            <div class="row p-1">
+                <div class="col-1">User</div>
+                <div class="col-5"><input type="text" id="userInput" /></div>
+            </div>
+            <div class="row p-1">
+                <div class="col-1">Message</div>
+                <div class="col-5"><input type="text" class="w-100" id="messageInput" /></div>
+            </div>
+            <div class="row p-1">
+                <div class="col-6 text-end">
+                    <input type="button" id="sendButton" value="Send Message" />
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col-6">
+                    <hr />
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col-6">
+                    <ul id="messagesList"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

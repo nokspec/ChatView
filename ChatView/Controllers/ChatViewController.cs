@@ -20,6 +20,11 @@ namespace ChatView.Controllers
             return View();
         }
 
+        public IActionResult ChatView()
+        {
+            return View();
+        }
+
         [HttpPost]
         public async Task<IActionResult> DownloadVideo(string url)
         {
@@ -39,7 +44,7 @@ namespace ChatView.Controllers
                     if (response.IsSuccessStatusCode)
                     {
                         var videoUrl = await response.Content.ReadAsStringAsync();
-                        var videoUrlTrimmed = String.Concat(videoUrl.Where(c => !Char.IsWhiteSpace(c)));
+                        var videoUrlTrimmed = string.Concat(videoUrl.Where(c => !Char.IsWhiteSpace(c)));
 
                         return Json(videoUrlTrimmed); // Return the video URL as JSON
                     }
@@ -48,7 +53,6 @@ namespace ChatView.Controllers
             }
             return View("Index");
         }
-
 
         private static bool IsValidURL(string url)
         {
