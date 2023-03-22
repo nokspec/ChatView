@@ -1,16 +1,19 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
+@{
+}
 
 <link rel="stylesheet" href="~/css/roomlobby.css" asp-append-version="true" />
-<script src="~/js/signalr/dist/browser/signalr.js"></script>
-<script src="~/js/room.js"></script>
-
 
 <section>
     <h1 style="">Create or join a room!</h1>
     <div class="room-container">
-        <input id="createButton" type="submit" value="Create room" class="button-room" onclick="" /> <br /> <br />
-        <input type="submit" value="Join room" class="button-room" onclick="" />
+        <form asp-action="CreateRoom">
+            <input type="submit" value="Create room" class="button-room" /> <br /> <br />
+        </form>
+        <form asp-action="Join">
+            <input type="submit" value="Join room" class="button-room" onclick="" />
+        </form>
     </div>
 </section>

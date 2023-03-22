@@ -1,10 +1,11 @@
 ﻿class ChatView {
-	constructor() {
+	constructor(roomId) {
+		this.roomId = roomId;
 		this.videoPlayer = document.getElementById('videoplayer');
 		this.currentTimeSpan = document.getElementById('current-time');
 
 		this.connection = new signalR.HubConnectionBuilder()
-			.withUrl("/chatviewhub")
+			.withUrl(`/chatviewhub?roomId=${this.roomId}`)
 			.configureLogging(signalR.LogLevel.Information)
 			.build(); //Create a connection
 		this.connection.start().then(function () {
@@ -103,7 +104,7 @@
 			data: { url: url },
 			success: function (data) {
 				$('#videoSource').attr('src', data); // Update the video source with the new URL
-				self.connection.invoke('SetVideo', data); // Use the saved reference to invoke the 'connection' method
+				self.connection.invoke('SetVideo', data); 
 				$('#videoplayer').get(0).load(); // Reload the video player
 			},
 			error: function (xhr, status, error) {
@@ -133,4 +134,3 @@
 }
 
 const chatView = new ChatView();
-

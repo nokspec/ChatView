@@ -60,5 +60,7 @@ namespace ChatView.Controllers
             Regex Rgx = new(Pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
             return Rgx.IsMatch(url);
         }
+
+
     }
 }
