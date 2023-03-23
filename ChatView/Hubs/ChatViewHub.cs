@@ -5,6 +5,13 @@ using System.Collections.Concurrent;
 
 namespace ChatView.Hubs
 {
+    public enum Roles
+    {
+        Admin,
+        Moderator,
+        Viewer
+    }
+
     public class ChatViewHub : Hub
     {
         // Store the current state of the video (playing or paused) and the current time
@@ -13,6 +20,7 @@ namespace ChatView.Hubs
 
         private static readonly List<Room> Rooms = new();
         private static readonly ConcurrentDictionary<Client, Room> ClientRoomDictionary = new();
+        private static readonly ConcurrentDictionary<string, string> Users = new();
 
         /// <summary>
         /// If a user creates a room, create new entry, otherwise add the user to the corresponding room
@@ -42,6 +50,9 @@ namespace ChatView.Hubs
             }
             await Groups.AddToGroupAsync(Context.ConnectionId, roomcode);
             ClientRoomDictionary.TryAdd(client, room);
+
+            var user = Context.User.Identity.Name;
+            Users.TryAdd(user, room.RoomId);
         }
 
         /// <summary>
@@ -50,10 +61,26 @@ namespace ChatView.Hubs
         /// <returns></returns>
         public async Task<Room> GetRoom()
         {
-            var ClientKVP = (ClientRoomDictionary.FirstOrDefault(x => x.Key.ConnectionId == Context.ConnectionId));
+            var ClientKVP = ClientRoomDictionary.FirstOrDefault(x => x.Key.ConnectionId == Context.ConnectionId);
             return ClientKVP.Value;
         }
 
+        public async Task<List<string>> GetUserList()
+        {
+            var room = await GetRoom();
+            List<string> result = new();
+            foreach(var user in Users)
+            {
+                if (user.Value == room.RoomId && !result.Contains(user.Value))
+                    result.Add(user.Key);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Get the Id of the current room
+        /// </summary>
+        /// <returns></returns>
         public async Task<string> GetRoomId()
         {
             var room = await GetRoom();
@@ -151,9 +178,11 @@ namespace ChatView.Hubs
         /// <returns></returns>
         public override async Task OnConnectedAsync()
         {
+            
+            //TODO fix dit, video updaten op andere plek. want nu synced ie wnr de room geopend wordt.
             // Send the current state and time to the new client
-            await Clients.Caller.SendAsync("UpdatePlayState", _isPlaying);
-            await Clients.Caller.SendAsync("UpdateTime", _currentTime);
+            //await Clients.Caller.SendAsync("UpdatePlayState", _isPlaying);
+            //await Clients.Caller.SendAsync("UpdateTime", _currentTime);
 
             await base.OnConnectedAsync();
         }
@@ -168,9 +197,9 @@ namespace ChatView.Hubs
             var room = await GetRoom();
 
             //TODO: when no one is in a room anymore, delete the room.
-            if (room.Clients.Count == 0)
-            {
-            }
+            //if (room.Clients.Count == 0)
+            //{
+            //}
 
             await base.OnDisconnectedAsync(ex);
         }

@@ -22,6 +22,20 @@
 		this.connection.invoke("JoinRoom", roomcode);
 	}
 
+	createUserList() {
+		var ul = document.getElementById('userlist');
+
+		this.connection.invoke("GetUserList").then((result) => {
+			result.forEach((user) => {
+				var li = document.createElement('li');
+
+				li.textContent = user;
+
+				ul.appendChild(li);
+			});
+		});
+	}
+
 	bindEvents() {
 		this.videoPlayer.addEventListener("play", () => {
 			console.log("play");
@@ -100,6 +114,7 @@
 			$('.lobby').hide();
 			$('.room').show();
 			this.getRoomId();
+			this.createUserList();
 		})
 
 		const joinRoom = document.getElementById('joinRoom');
@@ -110,6 +125,7 @@
 			$('.lobby').hide();
 			$('.room').show();
 			this.getRoomId();
+			this.createUserList();
 		})
 	}
 

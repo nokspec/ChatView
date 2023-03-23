@@ -141,3 +141,21 @@ input[type="range"] {
 }
 
 /**/
+
+/*users*/
+.usersbox-container {
+	flex-direction: column;
+	align-items: center;
+	margin: 0 auto;
+	position: absolute;
+	top: 50%;
+	left: 85%;
+	transform: translate(-50%, -50%);
+	border-radius: 10px;
+	background: #525355;
+	padding: 15px;
+	color: white;
+	width: 310px;
+	height: 510px;
+}
+/**/
