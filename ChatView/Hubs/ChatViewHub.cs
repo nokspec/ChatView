@@ -1,4 +1,5 @@
-﻿using ChatView.Models.ChatView;
+﻿using ChatView.Models;
+using ChatView.Models.ChatView;
 using Microsoft.AspNetCore.SignalR;
 using System.Collections.Concurrent;
 
@@ -10,77 +11,146 @@ namespace ChatView.Hubs
         private static bool _isPlaying;
         private static double _currentTime;
 
-        public List<string> Rooms { get; set; }
+        private static readonly List<Room> Rooms = new();
+        private static readonly ConcurrentDictionary<Client, Room> ClientRoomDictionary = new();
 
-        public void SetVideo(string url)
+        /// <summary>
+        /// If a user creates a room, create new entry, otherwise add the user to the corresponding room
+        /// </summary>
+        /// <param name="roomcode"></param>
+        /// <returns></returns>
+        public async Task JoinRoom(string roomcode)
         {
-            Clients.All.SendAsync("SetVideo", url);
-        }
+            Client client = new();
+            client.ConnectionId = Context.ConnectionId;
 
-        // Handle the play event from a client
-        public void Play()
-        {
-            // Update the state and broadcast it to all clients in the room
-            _isPlaying = true;
-            Clients.Group(Context.GetHttpContext().Request.Query["roomId"]).SendAsync("UpdatePlayState", _isPlaying);
-        }
-
-        // Handle the pause event from a client
-        public void Pause()
-        {
-            // Update the state and broadcast it to all clients in the room
-            _isPlaying = false;
-            Clients.Group(Context.GetHttpContext().Request.Query["roomId"]).SendAsync("UpdatePlayState", _isPlaying);
-        }
-
-        // Handle the timeupdate event from a client
-        public void TimeUpdate(double time)
-        {
-            // Update the current time and broadcast it to all clients in the room
-            if (time != _currentTime)
+            // check if room exists, if not, make a new room. otherwise join it
+            Room room = Rooms.FirstOrDefault(x => x.RoomId == roomcode);
+            if (room is null)
             {
-                _currentTime = time;
-                Clients.Group(Context.GetHttpContext().Request.Query["roomId"]).SendAsync("UpdateTime", _currentTime);
-            }
-        }
-
-        // Handle the seek event from a client
-        public void Seek(double time)
-        {
-            // Update the current time and broadcast it to all clients in the room
-            if (time != _currentTime)
-            {
-                _currentTime = time;
-                Clients.Group(Context.GetHttpContext().Request.Query["roomId"]).SendAsync("UpdateTime", _currentTime);
-            }
-        }
-
-        public void UpdateRooms(List<string> rooms)
-        {
-            //Rooms = new(); //onnodig vgm
-            Rooms = rooms;
-        }
-
-        // Handle a client joining the room or channel
-        public override async Task OnConnectedAsync()
-        {
-            string roomId = Context.GetHttpContext().Request.Query["roomId"];
-
-            // Check if the room exists
-            if (!Rooms.TryGetValue(roomId, out Room room))
-            {
-                //TOOD: add error handling for when a room doesnt exist
-                return;
+                room = new Room
+                {
+                    RoomId = roomcode,
+                    OwnerId = client.ConnectionId,
+                    Clients = new List<Client> { client } // Add the client to the list of clients in the room.
+                };
+                Rooms.Add(room);
             }
             else
             {
-                // If the room exists, add the new user to the list of users in the room
-                room.Users.Add(Context.ConnectionId);
+                room.Clients.Add(client); // Add the client to the list of clients in the existing room.
             }
+            await Groups.AddToGroupAsync(Context.ConnectionId, roomcode);
+            ClientRoomDictionary.TryAdd(client, room);
+        }
 
-            // Add the user to the SignalR group for the room
-            await Groups.AddToGroupAsync(Context.ConnectionId, roomId);
+        /// <summary>
+        /// Gets the room based on client
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Room> GetRoom()
+        {
+            var ClientKVP = (ClientRoomDictionary.FirstOrDefault(x => x.Key.ConnectionId == Context.ConnectionId));
+            return ClientKVP.Value;
+        }
 
+        public async Task<string> GetRoomId()
+        {
+            var room = await GetRoom();
+            return room.RoomId;
+        }
+
+        /// <summary>
+        /// Set the video URL for all clients
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        public async Task SetVideo(string url)
+        {
+            var room = await GetRoom();
+
+            if (room != null)
+            {
+                // Set a new video for all users.
+                await Clients.Group(room.RoomId).SendAsync("SetVideo", url);
+            }
+        }
+
+        /// <summary>
+        /// Handle the play event from a client
+        /// </summary>
+        /// <returns></returns>
+        public async Task Play()
+        {
+            var room = await GetRoom();
+            if (room != null)
+            {
+                // Update the state and broadcast it to all clients
+                _isPlaying = true;
+                await Clients.Group(room.RoomId).SendAsync("UpdatePlayState", _isPlaying);
+            }
+        }
+
+        /// <summary>
+        /// Handle the pause event from a client
+        /// </summary>
+        /// <returns></returns>
+        public async Task Pause()
+        {
+            var room = await GetRoom();
+
+            if (room != null)
+            { // Update the state and broadcast it to all clients
+                _isPlaying = false;
+                await Clients.Group(room.RoomId).SendAsync("UpdatePlayState", _isPlaying);
+            }
+        }
+
+        /// <summary>
+        /// Handle the timeupdate event from a client
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>        
+        public async Task TimeUpdate(double time)
+        {
+            var room = await GetRoom();
+
+            if (room != null)
+            {
+                // Update the current time and broadcast it to all clients
+                if (time != _currentTime)
+                {
+                    _currentTime = time;
+                    await Clients.Group(room.RoomId).SendAsync("UpdateTime", _currentTime);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Handle the seek event from a client
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public async Task Seek(double time)
+        {
+            var room = await GetRoom();
+            if (room != null)
+            {
+                // Update the current time and broadcast it to all clients
+                if (time != _currentTime)
+                {
+                    _currentTime = time;
+                    await Clients.Group(room.RoomId).SendAsync("UpdateTime", _currentTime);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Handle a client joining the room or channel
+        /// </summary>
+        /// <returns></returns>
+        public override async Task OnConnectedAsync()
+        {
             // Send the current state and time to the new client
             await Clients.Caller.SendAsync("UpdatePlayState", _isPlaying);
             await Clients.Caller.SendAsync("UpdateTime", _currentTime);
@@ -88,32 +158,36 @@ namespace ChatView.Hubs
             await base.OnConnectedAsync();
         }
 
-        public override async Task OnDisconnectedAsync(Exception exception)
+        /// <summary>
+        /// When all the users have disconnected from the room, delete the room.
+        /// </summary>
+        /// <param name="ex"></param>
+        /// <returns></returns>
+        public override async Task OnDisconnectedAsync(Exception ex)
         {
-            // Remove the user from the room
-            if (Context.Items.TryGetValue("room", out var roomId) &&
-                Rooms.TryGetValue((string)roomId, out var room))
+            var room = await GetRoom();
+
+            //TODO: when no one is in a room anymore, delete the room.
+            if (room.Clients.Count == 0)
             {
-                room.Users.Remove(Context.ConnectionId);
-
-                // Notify other users in the room that the user has left
-                await Clients.Group((string)roomId).SendAsync("UserLeftRoom", Context.ConnectionId);
-
-                // If there are no more users in the room, remove the room
-                if (room.Users.Count == 0)
-                {
-                    Rooms.TryRemove((string)roomId, out _);
-                }
             }
 
-            await base.OnDisconnectedAsync(exception);
+            await base.OnDisconnectedAsync(ex);
         }
 
-
-        //chat
+        /// <summary>
+        /// Client sends a message to the other users in the corresponding room
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         public async Task SendMessage(string message)
         {
-            await Clients.All.SendAsync("ReceiveMessage", Context.User.Identity.Name, message);
+            var user = Context.User.Identity.Name;
+            var room = await GetRoom();
+            if (room != null)
+            {
+                await Clients.Group(room.RoomId).SendAsync("ReceiveMessage", user, message);
+            }
         }
     }
 }

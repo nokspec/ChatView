@@ -18,7 +18,7 @@
             </li>
             @*@if(User.IsInRole("Admin")) {*@
                 <li class="nav-bar__item">
-                    <a asp-area="" asp-controller="Room" asp-action="Index">ChatView</a>
+                <a asp-area="" asp-controller="ChatView" asp-action="ChatView">ChatView</a>
                 </li>
             @*}*@
             <li class="nav-bar__item">
@@ -36,7 +36,7 @@
             @RenderBody()
         </main>
     </div>
-    <footer class="border-top footer text-muted">
+    <footer class="footer text-muted">
         <div class="container">
             <a>&copy; 2023 - ChatView</a>
         </div>

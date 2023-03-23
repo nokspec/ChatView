@@ -1,9 +1,14 @@
 ﻿/*chatview*/
+
+.room {
+	display: none;
+}
+
 .urlbox {
 	width: 30%;
 	padding: 12px 20px;
 	box-sizing: border-box;
-	border-radius: 4px;
+	border-radius: 5px;
 	-webkit-transition: 0.5s;
 	transition: 0.5s;
 	position: absolute;
@@ -44,13 +49,17 @@ video {
 }
 
 .video-container {
-	box-shadow: 0px 0px 15px rgba(0, 0, 0, 1);
 	position: absolute;
 	top: 50%;
 	left: 30%;
 	transform: translate(-50%, -50%);
 	width: 960px;
 	height: 540px;
+}
+
+.video-mask {
+	border-radius: 10px;
+	overflow: hidden;
 }
 
 #play-button {
@@ -96,7 +105,7 @@ input[type="range"] {
 	font-size: 14px;
 	transition-duration: 0.4s;
 	border: 2px solid #1e1e1e;
-	border-radius: 15px;
+	border-radius: 5px;
 	width: 70px;
 	height: 40px;
 	display: inline-block;
@@ -114,7 +123,7 @@ input[type="range"] {
 }
 /**/
 
-/*chathub*/
+/*chat*/
 .chatbox-container {
 	flex-direction: column;
 	align-items: center;
@@ -123,12 +132,12 @@ input[type="range"] {
 	top: 50%;
 	left: 65%;
 	transform: translate(-50%, -50%);
-	border-radius: 15px;
-	background: #333333;
-	box-shadow: 0px 0px 15px rgba(0, 0, 0, 1);
+	border-radius: 10px;
+	background: #525355;
 	padding: 15px;
 	color: white;
 	width: 400px;
 	height: 510px;
 }
+
 /**/

@@ -1,22 +1,25 @@
 ﻿class ChatView {
-	constructor(roomId) {
-		this.roomId = roomId;
+	constructor() {
 		this.videoPlayer = document.getElementById('videoplayer');
 		this.currentTimeSpan = document.getElementById('current-time');
 
 		this.connection = new signalR.HubConnectionBuilder()
-			.withUrl(`/chatviewhub?roomId=${this.roomId}`)
+			.withUrl(`/chatviewhub`)
 			.configureLogging(signalR.LogLevel.Information)
-			.build(); //Create a connection
+			.build();
+
 		this.connection.start().then(function () {
 			document.getElementById("sendButton").disabled = false;
-		}).catch(err => console.error(err.toString())); //Start the connection
-
+		}).catch(err => console.error(err.toString()));
 		this.bindEvents();
 		this.bindSignalREvents();
 		this.bindFormSubmit();
 		this.resetForm();
 		this.chatButton();
+	}
+
+	createRoom(roomcode) {
+		this.connection.invoke("JoinRoom", roomcode);
 	}
 
 	bindEvents() {
@@ -76,19 +79,43 @@
 		this.connection.on("ReceiveMessage", function (user, message) {
 			var li = document.createElement("li");
 			document.getElementById("messagesList").appendChild(li);
-			// We can assign user-supplied strings to an element's textContent because it
-			// is not interpreted as markup. If you're assigning in any other way, you 
-			// should be aware of possible script injection concerns.
 			li.textContent = `${user}: ${message}`;
 		});
 	}
 
 	bindFormSubmit() {
-		const form = document.getElementById('videoForm');
-		form.addEventListener('submit', (event) => {
+		const videoForm = document.getElementById('videoForm');
+		videoForm.addEventListener('submit', (event) => {
 			event.preventDefault();
 			const url = document.getElementById('URL').value;
 			this.fetchVideo(url);
+		});
+
+
+		const createRoom = document.getElementById('createRoom');
+		createRoom.addEventListener('click', (event) => {
+			event.preventDefault();
+			const roomcode = document.getElementById('roomcode').value;
+			this.createRoom(roomcode);
+			$('.lobby').hide();
+			$('.room').show();
+			this.getRoomId();
+		})
+
+		const joinRoom = document.getElementById('joinRoom');
+		joinRoom.addEventListener('click', (event) => {
+			event.preventDefault();
+			const roomcode = document.getElementById('roomcode').value;
+			this.createRoom(roomcode);
+			$('.lobby').hide();
+			$('.room').show();
+			this.getRoomId();
+		})
+	}
+
+	getRoomId() {
+		this.connection.invoke("GetRoomId").then(function (roomId) {
+			document.getElementById("roomId").textContent = "Room code: " + roomId || "Couldn't retrieve room code";
 		});
 	}
 
@@ -104,8 +131,9 @@
 			data: { url: url },
 			success: function (data) {
 				$('#videoSource').attr('src', data); // Update the video source with the new URL
-				self.connection.invoke('SetVideo', data); 
+				self.connection.invoke('SetVideo', data);
 				$('#videoplayer').get(0).load(); // Reload the video player
+				console.log("video set");
 			},
 			error: function (xhr, status, error) {
 				console.log(error); // Log any errors to the console
@@ -123,9 +151,8 @@
 
 	chatButton() {
 		document.getElementById("sendButton").addEventListener("click", (event) => {
-			var user = document.getElementById("userInput").value;
 			var message = document.getElementById("messageInput").value;
-			this.connection.invoke("SendMessage", user, message).catch(function (err) {
+			this.connection.invoke("SendMessage", message).catch(function (err) {
 				return console.error(err.toString());
 			});
 			event.preventDefault();

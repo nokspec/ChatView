@@ -1,61 +1,71 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@@{
+﻿@{
     ViewData["Title"] = "Chat Room";
 }
+
 <script src="~/js/chatview.js" defer></script>
 <script src="~/js/signalr/dist/browser/signalr.js"></script>
 <link rel="stylesheet" href="~/css/chatview.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/lobby.css" asp-append-version="true" />
 
-<div>
-    <h1>ChatView Room, Id: @ViewData["RoomId"]</h1>
-</div>
-
-<asp:UpdatePanel ID="urlUpdatePanel" runat="server">
-    <ContentTemplate>
-        <div class="urlbox">
-            <form id="videoForm" method="post" autocomplete="off">
-                <div class="url-container">
-                    <input type="text" id="URL" name="URL" placeholder="Youtube URL" />
-                    <input type="submit" value="Submit" class="button-urlbox" />
-                    <div class="spinner"></div>
-                </div>
-            </form>
+<container id="lobby" class="lobby">
+    <section>
+        <div class="room-container">
+            <a style="font-size: 28px; ">Create or join a room!</a> <br />
+            <input type="text" id="roomcode" class="roomcodebox" name="roomcode" placeholder="Enter a roomcode" autocomplete="off" />
+            <br /><br /><br />
+            <input type="submit" id="createRoom" value="Create room" class="button-room" /> <br /> <br /><br />
+            <input type="submit" id="joinRoom" value="Join room" class="button-room" />
         </div>
-    </ContentTemplate>
-</asp:UpdatePanel>
+    </section>
+</container>
 
-<section class="video-player">
-    <div class="video-container">
-        <video id="videoplayer" controls>
-            <source id="videoSource" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
+<container id="room" class="room">
+    <div>
+        <h1 id="roomId"></h1>
     </div>
-</section>
 
-<section class="chatbox">
-    <div class="chatbox-container">
-        <div class="container">
-            <div class="row p-1">
-                <div class="col-1">Message</div>
-                <div class="col-5"><input type="text" class="w-100" id="messageInput" /></div>
+    <asp:UpdatePanel ID="urlUpdatePanel" runat="server">
+        <ContentTemplate>
+            <div class="urlbox">
+                <form id="videoForm" method="post" autocomplete="off">
+                    <div class="url-container">
+                        <input type="text" id="URL" name="URL" placeholder="Youtube URL" />
+                        <input type="submit" value="Submit" class="button-urlbox" />
+                        <div class="spinner"></div>
+                    </div>
+                </form>
             </div>
-            <div class="row p-1">
-                <div class="col-6 text-end">
-                    <input type="button" id="sendButton" value="Send Message" />
+        </ContentTemplate>
+    </asp:UpdatePanel>
+
+    <section class="video-player">
+        <div class="video-container">
+            <div class="video-mask">
+                <video id="videoplayer" controls>
+                    <source id="videoSource" type="video/mp4">
+                </video>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="chatbox">
+        <div class="chatbox-container">
+            <div class="container">
+                <div class="row p-1">
+                    <div class="col-5"><input type="text" class="w-100" id="messageInput" /></div>
                 </div>
-            </div>
-            <div class="row p-1">
-                <div class="col-6">
-                    <hr />
+                <div class="row p-1">
+                    <div class="col-6 text-end">
+                        <input type="button" id="sendButton" value="Send Message" />
+                    </div>
                 </div>
-            </div>
-            <div class="row p-1">
-                <div class="col-6">
-                    <ul id="messagesList"></ul>
+                <div class="row p-1">
+                    <div class="col-6">
+                        <ul id="messagesList"></ul>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+</container>

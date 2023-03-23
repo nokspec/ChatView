@@ -46,7 +46,7 @@ namespace ChatView.Controllers
                         var videoUrl = await response.Content.ReadAsStringAsync();
                         var videoUrlTrimmed = string.Concat(videoUrl.Where(c => !Char.IsWhiteSpace(c)));
 
-                        return Json(videoUrlTrimmed); // Return the video URL as JSON
+                        return Json(videoUrlTrimmed);
                     }
                     return View("Index");
                 }
@@ -60,7 +60,5 @@ namespace ChatView.Controllers
             Regex Rgx = new(Pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
             return Rgx.IsMatch(url);
         }
-
-
     }
 }
