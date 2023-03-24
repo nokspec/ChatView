@@ -16,11 +16,11 @@
             <li class="nav-bar__item">
                 <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
             </li>
-            @*@if(User.IsInRole("Admin")) {*@
+            @if(User.Identity.IsAuthenticated) {
                 <li class="nav-bar__item">
                 <a asp-area="" asp-controller="ChatView" asp-action="ChatView">ChatView</a>
                 </li>
-            @*}*@
+            }
             <li class="nav-bar__item">
                 <a asp-area="" asp-controller="Profile" asp-action="Index">Profile</a>
             </li>

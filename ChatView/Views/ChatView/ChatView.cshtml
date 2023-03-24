@@ -20,7 +20,7 @@
 </container>
 
 <container id="room" class="room">
-    <div>
+    <div class="center">
         <h1 id="roomId"></h1>
     </div>
 
@@ -41,7 +41,7 @@
     <section class="video-player">
         <div class="video-container">
             <div class="video-mask">
-                <video id="videoplayer" controls>
+                <video id="videoplayer">
                     <source id="videoSource" type="video/mp4">
                 </video>
             </div>
@@ -69,11 +69,13 @@
         </div>
     </section>
 
-    <section class="users">
-        <div class="usersbox-container">
-            <ul id="userlist">
-
-            </ul>
-        </div>
-    </section>
+    <asp:UpdatePanel ID="urlUpdatePanel" runat="server">
+        <ContentTemplate>
+            <div class="usersbox-container">
+                <h2>Connected users</h2>
+                <ul id="userlist">
+                </ul>
+            </div>
+        </ContentTemplate>
+    </asp:UpdatePanel>
 </container>

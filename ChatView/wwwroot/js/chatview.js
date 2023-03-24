@@ -8,14 +8,15 @@
 			.configureLogging(signalR.LogLevel.Information)
 			.build();
 
-		this.connection.start().then(function () {
-			document.getElementById("sendButton").disabled = false;
-		}).catch(err => console.error(err.toString()));
 		this.bindEvents();
 		this.bindSignalREvents();
 		this.bindFormSubmit();
 		this.resetForm();
 		this.chatButton();
+
+		this.connection.start().then(function () {
+			document.getElementById("sendButton").disabled = false;
+		}).catch(err => console.error(err.toString()));
 	}
 
 	createRoom(roomcode) {
@@ -24,16 +25,128 @@
 
 	createUserList() {
 		var ul = document.getElementById('userlist');
+		while (ul.firstChild) ul.removeChild(ul.firstChild);
 
 		this.connection.invoke("GetUserList").then((result) => {
+			console.log(result);
 			result.forEach((user) => {
 				var li = document.createElement('li');
-
 				li.textContent = user;
-
 				ul.appendChild(li);
 			});
 		});
+	}
+
+	bindSignalREvents() {
+		this.connection.on("createuserlist", (userList) => {
+			let ul = document.getElementById('userlist');
+			ul.innerHTML = '';
+			userList.forEach((user) => {
+
+				this.connection.invoke("GetUser");
+				this.connection.on("GetUser", (currentUser) => {
+					//TODO fix dit
+				})
+				let CurrentUser;
+
+				let li = document.createElement('li');
+				li.textContent = user;
+
+				if (CurrentUser != user) {
+					
+					let select = document.createElement('select');
+					let username = user;
+
+					let choose = document.createElement('option');
+					choose.textContent = "";
+					choose.value = "choose";
+
+					let promote = document.createElement('option');
+					promote.textContent = "Promote";
+					promote.value = "promote";
+
+					let demote = document.createElement('option');
+					demote.textContent = "Demote";
+					demote.value = "demote";
+
+					let mute = document.createElement('option');
+					mute.textContent = "Mute";
+					mute.value = "mute";
+
+					let unmute = document.createElement('option');
+					unmute.textContent = "Unmute";
+					unmute.value = "unmute";
+
+					select.appendChild(choose);
+					select.appendChild(promote);
+					select.appendChild(demote);
+					select.appendChild(mute);
+					select.appendChild(unmute);
+
+					let initialOptionValue = select.value;
+
+					select.addEventListener("change", () => {
+						let selectedIndex = select.selectedIndex;
+						let selectedOption = select.options[selectedIndex];
+						console.log(selectedOption.value);
+						console.log(username);
+
+						this.HandleSelectedOption(selectedOption.value, username);
+
+						setTimeout(function () {
+							select.value = initialOptionValue;
+						}, 500);
+					});
+
+					li.appendChild(select);
+					ul.appendChild(li);
+				}
+			});
+		});
+
+		this.connection.on('SetVideo', (url) => {
+			$('#videoSource').attr('src', url);
+			$('#videoplayer').get(0).load();
+		});
+
+		this.connection.on('UpdatePlayState', (isPlaying) => {
+			this.updatePlayState(isPlaying);
+		});
+
+		this.connection.on('UpdateTime', (currentTime) => {
+			this.updateTime(currentTime);
+		});
+
+		this.connection.on("ReceiveMessage", (user, message) => {
+			var li = document.createElement("li");
+			document.getElementById("messagesList").appendChild(li);
+			li.textContent = `${user}: ${message}`;
+		});
+
+		this.connection.on("AddVideoPlayer", () => {
+			this.videoPlayer.setAttribute("controls", "controls")
+		})
+
+		this.connection.on("RemoveVideoPlayer", () => {
+			this.videoPlayer.removeAttribute("controls");
+		})
+
+		this.connection.on("UrlLoading", () => {
+			this.urlLoading();
+		});
+
+		this.connection.on("UserMuted", () => {
+			alert("You're muted");
+		});
+
+		this.connection.on("UserUnmuted", () => {
+			alert("You've been unmuted");
+		});
+
+	}
+
+	HandleSelectedOption(option, user) {
+		this.connection.invoke("HandleSelectOption", option, user);
 	}
 
 	bindEvents() {
@@ -74,59 +187,49 @@
 		this.videoPlayer.currentTime = currentTime;
 	}
 
-	bindSignalREvents() {
-		this.connection.on('SetVideo', (url) => {
-			console.log("URL set");
-			console.log(url);
-			$('#videoSource').attr('src', url);
-			$('#videoplayer').get(0).load();
-		});
-
-		this.connection.on('UpdatePlayState', (isPlaying) => {
-			this.updatePlayState(isPlaying);
-		});
-
-		this.connection.on('UpdateTime', (currentTime) => {
-			this.updateTime(currentTime);
-		});
-
-		this.connection.on("ReceiveMessage", function (user, message) {
-			var li = document.createElement("li");
-			document.getElementById("messagesList").appendChild(li);
-			li.textContent = `${user}: ${message}`;
-		});
-	}
-
 	bindFormSubmit() {
 		const videoForm = document.getElementById('videoForm');
 		videoForm.addEventListener('submit', (event) => {
 			event.preventDefault();
 			const url = document.getElementById('URL').value;
-			this.fetchVideo(url);
+			if (url != '') {
+				this.fetchVideo(url);
+				this.connection.invoke("VideoLoading");
+			}
+			else {
+				alert("Please enter a Youtube URL");
+			}
 		});
-
 
 		const createRoom = document.getElementById('createRoom');
 		createRoom.addEventListener('click', (event) => {
 			event.preventDefault();
 			const roomcode = document.getElementById('roomcode').value;
-			this.createRoom(roomcode);
-			$('.lobby').hide();
-			$('.room').show();
-			this.getRoomId();
-			this.createUserList();
-		})
+			if (roomcode != '') {
+				this.createRoom(roomcode);
+				$('.lobby').hide();
+				$('.room').show();
+				this.getRoomId();
+			}
+			else {
+				alert("Please enter a room code");
+			}
+		});
 
 		const joinRoom = document.getElementById('joinRoom');
 		joinRoom.addEventListener('click', (event) => {
 			event.preventDefault();
 			const roomcode = document.getElementById('roomcode').value;
-			this.createRoom(roomcode);
-			$('.lobby').hide();
-			$('.room').show();
-			this.getRoomId();
-			this.createUserList();
-		})
+			if (roomcode != '') {
+				this.createRoom(roomcode);
+				$('.lobby').hide();
+				$('.room').show();
+				this.getRoomId();
+			}
+			else {
+				alert("Please enter a room code");
+			}
+		});
 	}
 
 	getRoomId() {
@@ -135,24 +238,27 @@
 		});
 	}
 
-	//TODO: misschien later nog vervangen met queryselector omdat jquery voor extra overhead zorgt en we het maar 2x gebruiken
-	fetchVideo(url) {
+	urlLoading() {
 		$('.urlbox').addClass('loading');
 		$('.spinner').show();
-		var self = this; // Save a reference to 'this'
-		var url = $('#URL').val(); // Get the URL from the input field
+	}
+
+	//TODO: misschien later nog vervangen met queryselector omdat jquery voor extra overhead zorgt en we het maar 2x gebruiken
+	fetchVideo(url) {
+		this.urlLoading();
+		var self = this;
+		var url = $('#URL').val();
 		$.ajax({
 			url: '/ChatView/DownloadVideo',
 			type: 'POST',
 			data: { url: url },
 			success: function (data) {
-				$('#videoSource').attr('src', data); // Update the video source with the new URL
+				$('#videoSource').attr('src', data);
 				self.connection.invoke('SetVideo', data);
-				$('#videoplayer').get(0).load(); // Reload the video player
-				console.log("video set");
+				$('#videoplayer').get(0).load();
 			},
-			error: function (xhr, status, error) {
-				console.log(error); // Log any errors to the console
+			error: function (error) {
+				console.log(error);
 			}
 		});
 	}
@@ -171,9 +277,11 @@
 			this.connection.invoke("SendMessage", message).catch(function (err) {
 				return console.error(err.toString());
 			});
+			document.getElementById("messageInput").value = '';
 			event.preventDefault();
 		});
 	}
 }
 
 const chatView = new ChatView();
+

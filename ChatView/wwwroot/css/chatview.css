@@ -4,6 +4,21 @@
 	display: none;
 }
 
+.center {
+	margin: auto;
+	width: 400px;
+	text-align: center;
+	background-color: #525355;
+	border-radius: 5px;
+	padding: 10px;
+}
+
+	.center h1 {
+		color: white;
+		margin: auto;
+		vertical-align: middle;
+	}
+
 .urlbox {
 	width: 30%;
 	padding: 12px 20px;
@@ -145,17 +160,32 @@ input[type="range"] {
 /*users*/
 .usersbox-container {
 	flex-direction: column;
-	align-items: center;
-	margin: 0 auto;
 	position: absolute;
 	top: 50%;
 	left: 85%;
 	transform: translate(-50%, -50%);
 	border-radius: 10px;
 	background: #525355;
-	padding: 15px;
+	padding: 10px;
 	color: white;
 	width: 310px;
 	height: 510px;
+	text-align:center;
 }
+
+	.usersbox-container h2 {
+		color: white;
+		margin: auto;
+		vertical-align: middle;
+	}
+
+li {
+	list-style-type: none;
+	margin: 5px 0 0 0 
+}
+
+	li select {
+		float: right;
+	}
+
 /**/

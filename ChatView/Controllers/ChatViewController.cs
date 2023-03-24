@@ -1,4 +1,5 @@
 ﻿using ChatView.Models.ChatView;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Text;
@@ -15,11 +16,7 @@ namespace ChatView.Controllers
             _httpClient = httpClient;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-
+        [Authorize]
         public IActionResult ChatView()
         {
             return View();
