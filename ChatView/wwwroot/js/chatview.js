@@ -40,6 +40,7 @@
 	bindSignalREvents() {
 		this.connection.on("createuserlist", (userList) => {
 			let ul = document.getElementById('userlist');
+			ul.classList.add('list');
 			ul.innerHTML = '';
 			userList.forEach((user) => {
 
@@ -118,8 +119,12 @@
 		});
 
 		this.connection.on("ReceiveMessage", (user, message) => {
-			var li = document.createElement("li");
-			document.getElementById("messagesList").appendChild(li);
+			let li = document.createElement("li");
+			
+			let ul = document.getElementById("messagesList")
+			ul.appendChild(li);
+			ul.classList.add('list');
+
 			li.textContent = `${user}: ${message}`;
 		});
 
@@ -143,6 +148,9 @@
 			alert("You've been unmuted");
 		});
 
+		this.connection.on("Unauthorized", () => {
+			alert("Unauthorized");
+		});
 	}
 
 	HandleSelectedOption(option, user) {

@@ -170,7 +170,6 @@ input[type="range"] {
 	color: white;
 	width: 310px;
 	height: 510px;
-	text-align:center;
 }
 
 	.usersbox-container h2 {
@@ -179,9 +178,14 @@ input[type="range"] {
 		vertical-align: middle;
 	}
 
+.list {
+	margin: 0;
+	padding: 0;
+}
+
 li {
-	list-style-type: none;
-	margin: 5px 0 0 0 
+	list-style: none;
+	margin: 5px 0 0 0;
 }
 
 	li select {
