@@ -46,7 +46,7 @@
 
 				this.connection.invoke("GetUser");
 				this.connection.on("GetUser", (currentUser) => {
-					//TODO fix dit
+					//TODO fix dit, currentuser moet You krijgen te zien.
 				})
 				let CurrentUser;
 
@@ -54,7 +54,7 @@
 				li.textContent = user;
 
 				if (CurrentUser != user) {
-					
+
 					let select = document.createElement('select');
 					let username = user;
 
@@ -78,11 +78,16 @@
 					unmute.textContent = "Unmute";
 					unmute.value = "unmute";
 
+					let kick = document.createElement('option');
+					kick.textContent = "Kick";
+					kick.value = "kick";
+
 					select.appendChild(choose);
 					select.appendChild(promote);
 					select.appendChild(demote);
 					select.appendChild(mute);
 					select.appendChild(unmute);
+					select.appendChild(kick);
 
 					let initialOptionValue = select.value;
 
@@ -120,7 +125,7 @@
 
 		this.connection.on("ReceiveMessage", (user, message) => {
 			let li = document.createElement("li");
-			
+
 			let ul = document.getElementById("messagesList")
 			ul.appendChild(li);
 			ul.classList.add('list');
@@ -150,6 +155,10 @@
 
 		this.connection.on("Unauthorized", () => {
 			alert("Unauthorized");
+		});
+
+		this.connection.on("KickUser", () => {
+			window.location.reload();
 		});
 	}
 
@@ -200,12 +209,13 @@
 		videoForm.addEventListener('submit', (event) => {
 			event.preventDefault();
 			const url = document.getElementById('URL').value;
-			if (url != '') {
+			const regex = /^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+$/;
+			if (regex.test(url)) {
 				this.fetchVideo(url);
 				this.connection.invoke("VideoLoading");
 			}
 			else {
-				alert("Please enter a Youtube URL");
+				alert("Please enter a valid URL");
 			}
 		});
 
@@ -251,7 +261,6 @@
 		$('.spinner').show();
 	}
 
-	//TODO: misschien later nog vervangen met queryselector omdat jquery voor extra overhead zorgt en we het maar 2x gebruiken
 	fetchVideo(url) {
 		this.urlLoading();
 		var self = this;
@@ -282,11 +291,17 @@
 	chatButton() {
 		document.getElementById("sendButton").addEventListener("click", (event) => {
 			var message = document.getElementById("messageInput").value;
-			this.connection.invoke("SendMessage", message).catch(function (err) {
-				return console.error(err.toString());
-			});
-			document.getElementById("messageInput").value = '';
-			event.preventDefault();
+			if (message != '') {
+				this.connection.invoke("SendMessage", message).catch(function (err) {
+					return console.error(err.toString());
+				});
+				document.getElementById("messageInput").value = '';
+				event.preventDefault();
+			}
+			else {
+				alert("Please enter a message");
+			}
+
 		});
 	}
 }

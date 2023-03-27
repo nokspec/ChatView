@@ -6,6 +6,7 @@ namespace ChatView.Models.ChatView
     {
         public string RoomCode { get; set; }
         public string OwnerId { get; set; }
+        public string VideoUrl { get; set; }
 
         public List<Client> Clients { get; set; }
     } 

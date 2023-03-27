@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Chat Room";
+    ViewData["Title"] = "Room";
 }
 
 <script src="~/js/chatview.js" defer></script>
@@ -10,7 +10,7 @@
 <container id="lobby" class="lobby">
     <section>
         <div class="room-container">
-            <a style="font-size: 28px; ">Create or join a room!</a> <br />
+            <a style="font-size: 28px;">Create or join a room!</a> <br />
             <input type="text" id="roomcode" class="roomcodebox" name="roomcode" placeholder="Enter a roomcode" autocomplete="off" />
             <br /><br /><br />
             <input type="submit" id="createRoom" value="Create room" class="button-room" /> <br /> <br /><br />
@@ -20,62 +20,57 @@
 </container>
 
 <container id="room" class="room">
-    <div class="center">
-        <h1 id="roomId"></h1>
-    </div>
-
-    <asp:UpdatePanel ID="urlUpdatePanel" runat="server">
-        <ContentTemplate>
-            <div class="urlbox">
-                <form id="videoForm" method="post" autocomplete="off">
-                    <div class="url-container">
-                        <input type="text" id="URL" name="URL" placeholder="Youtube video URL" />
-                        <input type="submit" value="Submit" class="button-urlbox" />
-                        <div class="spinner"></div>
-                    </div>
-                </form>
-            </div>
-        </ContentTemplate>
-    </asp:UpdatePanel>
-
-    <section class="video-player">
-        <div class="video-container">
-            <div class="video-mask">
-                <video id="videoplayer">
-                    <source id="videoSource" type="video/mp4">
-                </video>
-            </div>
-
+    <div class="container-wrapper">
+        <div class="roomcode">
+            <h1 id="roomId"></h1>
         </div>
-    </section>
 
-    <section class="chatbox">
-        <div class="chatbox-container">
-            <div class="container">
-                <div class="row p-1">
-                    <div class="col-5"><input type="text" class="w-100" id="messageInput" /></div>
+        <asp:UpdatePanel ID="urlUpdatePanel" runat="server">
+            <ContentTemplate>
+                <div class="urlbox">
+                    <form id="videoForm" method="post" autocomplete="off">
+                        <div class="url-container">
+                            <input type="text" id="URL" name="URL" placeholder="Youtube video URL" />
+                            <input type="submit" value="Submit" class="button-urlbox" />
+                            <div class="spinner"></div>
+                        </div>
+                    </form>
                 </div>
-                <div class="row p-1">
-                    <div class="col-6 text-end">
-                        <input type="button" id="sendButton" value="Send Message" />
-                    </div>
+            </ContentTemplate>
+        </asp:UpdatePanel>
+
+        <section class="video-player">
+            <div class="video-container">
+                <div class="video-mask">
+                    <video id="videoplayer">
+                        <source id="videoSource" type="video/mp4">
+                    </video>
                 </div>
-                <div class="row p-1">
-                    <div class="col-6">
+            </div>
+        </section>
+
+        <section class="chatbox">
+            <div class="chatbox-container ">
+                <div class="">
+                    <input type="text" class="chatbox-textbox" id="messageInput" />
+                    <input class="button-message" type="button" id="sendButton" value="Send" />
+                </div>
+                <div class="messagelist">
+                    <div class="">
                         <ul id="messagesList"></ul>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <asp:UpdatePanel ID="urlUpdatePanel" runat="server">
-        <ContentTemplate>
-            <div class="usersbox-container">
-                <h2>Connected users</h2>
-                <ul id="userlist">
-                </ul>
-            </div>
-        </ContentTemplate>
-    </asp:UpdatePanel>
+        <asp:UpdatePanel ID="urlUpdatePanel" runat="server">
+            <ContentTemplate>
+                <div class="usersbox-container">
+                    <h2>Connected users</h2>
+                    <ul id="userlist">
+                    </ul>
+                </div>
+            </ContentTemplate>
+        </asp:UpdatePanel>
+    </div>
 </container>

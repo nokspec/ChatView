@@ -1,6 +1,7 @@
 ﻿using ChatView.Models;
 using ChatView.Models.Contact;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
 using System.Text;
 
@@ -38,7 +39,7 @@ namespace ChatView.Controllers
             var response = await _httpClient.PostAsync(apiUrl, content);
 
             if (response.IsSuccessStatusCode) return View("Success");
-            return View("Error");
+            return View("Index");
         }
     }
 }

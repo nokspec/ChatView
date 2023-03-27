@@ -1,14 +1,12 @@
+@import url('site.css');
 html {
 	font-size: 14px;
+	position: relative;
+	min-height: 100%;
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
 	box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-	position: relative;
-	min-height: 100%;
 }
 
 body {
@@ -58,6 +56,10 @@ body {
 		.nav-bar__item-identity a:hover {
 			background-color: #111;
 		}
+
+.nav-mobile {
+	display: none;
+}
 
 .login-container {
 	flex-direction: column;
@@ -180,87 +182,6 @@ textarea {
 	align-items: center;
 }
 
-.personalia-container, .profile-container {
-	background: #525355;
-	border-radius: 15px;
-	width: 350px;
-	padding: 15px;
-	margin: 150px 50px 50px 50px;
-	color: white;
-}
-
-.personalia-container {
-	margin-right: 25px;
-	height: 400px;
-	display: flex;
-	flex-direction: column;
-	animation: floating 3s ease-in-out infinite;
-}
-
-.profile-container {
-	height: 600px;
-	animation: floating2 6s ease-in-out infinite;
-}
-
-.personalia-container__photo {
-	width: 150px;
-	height: 150px;
-	border-radius: 15px;
-}
-
-.personalia-container__info {
-	margin: 0px;
-	padding: 0px 0px 10px 0px;
-	font-style: normal;
-}
-
-.personalia-container__socialmedia {
-	margin: 100px 0px 0px 205px;
-	padding: 15px;
-	display: flex;
-	height: 10px;
-	width: 50px;
-}
-
-.profile-content__category-title {
-	color: white;
-}
-
-.profile-content__category--hidden-mobile {
-	display: none;
-}
-
-.profile-content__element {
-	display: flex;
-	flex-direction: column;
-}
-
-.profile-content__element--hidden-mobile {
-	display: flex;
-	flex-direction: column;
-	display: none;
-}
-
-.profile-content__title {
-	font-weight: bold;
-	font-size: 18px;
-	margin-bottom: 2px;
-	margin-top: 6px;
-}
-
-.profile-content__period {
-	display: none;
-}
-
-.profile-content__institute {
-	color: lightslategrey;
-	margin-top: 0px;
-	font-size: 14px;
-}
-
-.home-container {
-}
-
 .p {
 	margin: 0px;
 }
@@ -349,42 +270,3 @@ textarea {
 }
 
 
-@media only screen and (min-width: 800px) {
-
-	.page {
-		flex-direction: row;
-	}
-
-	.person-name {
-		order: -1;
-	}
-
-	.profile-content__category--hidden-mobile {
-		display: flex;
-		flex-direction: column;
-	}
-
-		/*fix: anders als stipje zichtbaar*/
-		.profile-content__category--hidden-mobile hr {
-			width: 100%;
-		}
-
-	.profile-content__element--hidden-mobile {
-		display: flex;
-	}
-
-	.profile-content__element-header {
-		display: flex;
-		justify-content: space-between;
-	}
-
-	.profile-content__period {
-		font-size: 12px;
-		color: #ccc;
-		display: flex;
-	}
-
-	.grid-container {
-		flex-wrap: wrap;
-	}
-}

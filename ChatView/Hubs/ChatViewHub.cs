@@ -1,5 +1,6 @@
 ﻿using ChatView.Models.ChatView;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Collections.Concurrent;
 
 namespace ChatView.Hubs
@@ -16,7 +17,6 @@ namespace ChatView.Hubs
         // Store the current state of the video (playing or paused) and the current time
         private static bool _isPlaying;
         private static double _currentTime;
-        private static string? _videoUrl; //if theres a video playing, save the url to update new users.
 
         private static readonly List<Room> Rooms = new();
         private static readonly ConcurrentDictionary<Client, Room> ClientRoomDictionary = new();
@@ -29,9 +29,11 @@ namespace ChatView.Hubs
         /// <returns></returns>
         public async Task JoinRoom(string roomcode)
         {
-            Client client = new();
-            client.ConnectionId = Context.ConnectionId;
-            client.Username = Context.User.Identity.Name;
+            Client client = new()
+            {
+                ConnectionId = Context.ConnectionId,
+                Username = Context.User.Identity.Name
+            };
 
             // check if room exists, if not, make a new room. Otherwise join it.
             Room room = Rooms.FirstOrDefault(x => x.RoomCode == roomcode);
@@ -63,9 +65,9 @@ namespace ChatView.Hubs
 
             await GetUserList();
 
-            if (_videoUrl != null) //If theres a video already being played.
+            if (room.VideoUrl != null) //If theres a video already being played.
             {
-                await Clients.Clients(client.ConnectionId).SendAsync("SetVideo", _videoUrl);
+                await Clients.Clients(client.ConnectionId).SendAsync("SetVideo", room.VideoUrl);
             }
         }
 
@@ -92,7 +94,7 @@ namespace ChatView.Hubs
                     await Clients.Clients(userToUpdate.Key.ConnectionId).SendAsync("RemoveVideoPlayer");
                     await Clients.Group(room.RoomCode).SendAsync("ReceiveMessage", userToUpdate.Key.Username, " has been demoted");
                 }
-                else if(option.Equals("mute") || option.Equals("unmute"))
+                else if (option.Equals("mute") || option.Equals("unmute"))
                 {
                     if (userToUpdate.Key.Role == Models.ChatView.Roles.Viewer)
                     {
@@ -108,6 +110,35 @@ namespace ChatView.Hubs
                             await Clients.Clients(userToUpdate.Key.ConnectionId).SendAsync("UserUnmuted");
                             await Clients.Group(room.RoomCode).SendAsync("ReceiveMessage", userToUpdate.Key.Username, " has been unmuted");
                         }
+                    }
+                    else
+                    {
+                        await Clients.Clients(ClientKVP.Key.ConnectionId).SendAsync("Unauthorized");
+                    }
+                }
+
+                else if (option.Equals("kick"))
+                {
+                    if (ClientKVP.Key.Role == Models.ChatView.Roles.Admin) //If user is authorized.
+                    {
+                        await Clients.Clients(userToUpdate.Key.ConnectionId).SendAsync("KickUser");
+
+                        //delete the user from the room
+                        await Groups.RemoveFromGroupAsync(userToUpdate.Key.ConnectionId, room.RoomCode);
+
+                        Client client = new();
+                        client.ConnectionId = userToUpdate.Key.ConnectionId;
+
+                        Room roomOut = new Room();
+                        client.Muted = false; //Unmute the user if the user was muted.
+                        client.Role = Models.ChatView.Roles.Viewer; //Set the role to default.
+                        ClientRoomDictionary.TryRemove(client, out roomOut);
+
+                        string value;
+                        var user = userToUpdate.Key.Username;
+                        Users.TryRemove(user, out value);
+
+                        await Clients.Group(room.RoomCode).SendAsync("ReceiveMessage", userToUpdate.Key.Username, " has been kicked");
                     }
                     else
                     {
@@ -178,7 +209,7 @@ namespace ChatView.Hubs
                 //Notify all users that a new video has been set
                 await Clients.Group(room.RoomCode).SendAsync("ReceiveMessage", user, "added a new video");
 
-                _videoUrl = url;
+                room.VideoUrl = url;
             }
         }
 
@@ -280,11 +311,10 @@ namespace ChatView.Hubs
         }
 
         /// <summary>
-        /// When all the users have disconnected from the room, delete the room.
+        /// Hande the current user disconnecting from a room. 
         /// </summary>
-        /// <param name="ex"></param>
         /// <returns></returns>
-        public override async Task OnDisconnectedAsync(Exception ex)
+        public async Task LeaveRoom()
         {
             var room = await GetRoom();
 
@@ -315,6 +345,16 @@ namespace ChatView.Hubs
 
                 GetUserList();
             }
+        }
+
+        /// <summary>
+        /// When all the users have disconnected from the room, delete the room.
+        /// </summary>
+        /// <param name="ex"></param>
+        /// <returns></returns>
+        public override async Task OnDisconnectedAsync(Exception ex)
+        {
+            await LeaveRoom();
             await base.OnDisconnectedAsync(ex);
         }
 

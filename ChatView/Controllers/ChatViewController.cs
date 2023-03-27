@@ -10,6 +10,7 @@ namespace ChatView.Controllers
     public class ChatViewController : Controller
     {
         private readonly HttpClient _httpClient;
+        private readonly Regex _youTubeUrlRegex = new Regex(@"/^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+$/");
 
         public ChatViewController(HttpClient httpClient)
         {
@@ -22,41 +23,33 @@ namespace ChatView.Controllers
             return View();
         }
 
-
         [HttpPost]
         public async Task<IActionResult> DownloadVideo(string url)
         {
-            if (url != null)
+            if (string.IsNullOrEmpty(url) || !_youTubeUrlRegex.IsMatch(url))
             {
-                if (IsValidURL(url))
-                {
-                    var apiUrl = "http://localhost:5134/api/chatview/newvideo";
-                    var payload = new NewVideo
-                    {
-                        Url = url
-                    };
-
-                    var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
-                    var response = await _httpClient.PostAsync(apiUrl, content);
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var videoUrl = await response.Content.ReadAsStringAsync();
-                        var videoUrlTrimmed = string.Concat(videoUrl.Where(c => !Char.IsWhiteSpace(c)));
-
-                        return Json(videoUrlTrimmed);
-                    }
-                    return View("Index");
-                }
+                return BadRequest("Invalid URL");
             }
-            return View("Index");
-        }
+            else
+            {
+                var apiUrl = "http://localhost:5134/api/chatview/newvideo";
+                var payload = new NewVideo
+                {
+                    Url = url
+                };
 
-        private static bool IsValidURL(string url)
-        {
-            string Pattern = @"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$";
-            Regex Rgx = new(Pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            return Rgx.IsMatch(url);
+                var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
+                var response = await _httpClient.PostAsync(apiUrl, content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var videoUrl = await response.Content.ReadAsStringAsync();
+                    var videoUrlTrimmed = string.Concat(videoUrl.Where(c => !Char.IsWhiteSpace(c)));
+
+                    return Json(videoUrlTrimmed);
+                }
+                return View("Index");
+            }
         }
     }
 }

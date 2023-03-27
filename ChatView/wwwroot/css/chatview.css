@@ -4,7 +4,7 @@
 	display: none;
 }
 
-.center {
+.roomcode {
 	margin: auto;
 	width: 400px;
 	text-align: center;
@@ -13,7 +13,7 @@
 	padding: 10px;
 }
 
-	.center h1 {
+	.roomcode h1 {
 		color: white;
 		margin: auto;
 		vertical-align: middle;
@@ -87,7 +87,7 @@ video {
 }
 
 input[type="range"] {
-	width: 100%;
+	width: 70%;
 	height: 5px;
 	margin: 10px 0;
 	background-color: #ddd;
@@ -106,6 +106,18 @@ input[type="range"] {
 		cursor: pointer;
 	}
 
+input[type=text] {
+	width: 75%;
+	padding: 12px 20px;
+	margin: 8px 0;
+	box-sizing: border-box;
+	border: 2px solid #ccc;
+	border-radius: 5px;
+	-webkit-transition: 0.5s;
+	transition: 0.5s;
+	outline: none;
+}
+
 .urlbox {
 	display: inline-block;
 	vertical-align: middle;
@@ -122,12 +134,33 @@ input[type="range"] {
 	border: 2px solid #1e1e1e;
 	border-radius: 5px;
 	width: 70px;
-	height: 40px;
+	height: 45px;
 	display: inline-block;
 	margin: 5px;
 }
 
 	.button-urlbox:hover {
+		background-color: #1e1e1e;
+		color: white;
+	}
+
+.button-message {
+	color: black;
+	background-color: white;
+	padding: 5px 5px;
+	text-align: center;
+	text-decoration: none;
+	font-size: 14px;
+	transition-duration: 0.4s;
+	border: 2px solid #1e1e1e;
+	border-radius: 5px;
+	width: 70px;
+	height: 45px;
+	display: inline-block;
+	margin: 5px;
+}
+
+	.button-message:hover {
 		background-color: #1e1e1e;
 		color: white;
 	}
@@ -140,6 +173,7 @@ input[type="range"] {
 
 /*chat*/
 .chatbox-container {
+	display: flex;
 	flex-direction: column;
 	align-items: center;
 	margin: 0 auto;
@@ -149,17 +183,27 @@ input[type="range"] {
 	transform: translate(-50%, -50%);
 	border-radius: 10px;
 	background: #525355;
-	padding: 15px;
+	padding: 10px;
 	color: white;
 	width: 400px;
-	height: 510px;
+	height: 520px;
+	align-items: flex-start;
+	display: inline;
 }
 
-/**/
+.chatbox-textbox {
+	width: 70%;
+}
 
+.messagelist {
+	height: 440px;
+	width: auto;
+	word-wrap: break-word;
+	overflow: auto;
+}
+/**/
 /*users*/
 .usersbox-container {
-	flex-direction: column;
 	position: absolute;
 	top: 50%;
 	left: 85%;
@@ -169,13 +213,14 @@ input[type="range"] {
 	padding: 10px;
 	color: white;
 	width: 310px;
-	height: 510px;
+	height: 520px;
+	overflow: auto;
+	display: flex;
+	flex-direction: column;
 }
 
 	.usersbox-container h2 {
 		color: white;
-		margin: auto;
-		vertical-align: middle;
 	}
 
 .list {
@@ -193,3 +238,105 @@ li {
 	}
 
 /**/
+
+@media (max-width: 650px) {
+	body {
+		width: auto;
+	}
+
+	input[type=text] {
+		margin: 5px;
+		width: 70%;
+	}
+
+	.container-wrapper {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.url-container {
+		margin: 10px 0;
+	}
+
+	.urlbox {
+		padding: 0;
+		width: 80%;
+		margin: 0;
+	}
+
+	.button-urlbox {
+		margin: 5px;
+		padding: 0;
+		float: left;
+	}
+
+	.video-container {
+		all: unset;
+	}
+
+	video {
+		margin: 60px 0 0 0;
+		height: auto;
+		width: 100%;
+		object-fit: fill;
+		position: absolute;
+	}
+
+	.chatbox-container {
+		width: 100%;
+		height: 300px;
+		left: unset;
+		transform: none;
+		padding: unset;
+		margin-top: 0;
+		display: inline;
+	}
+
+	.messagelist {
+		height: auto;
+		width: auto;
+		word-wrap: break-word;
+		overflow: auto;
+		padding: 0;
+	}
+
+	.button-message {
+		padding: 0;
+		float: right;
+		position: absolute;
+	}
+
+	.usersbox-container {
+		flex-wrap: nowrap;
+		height: auto; /* Reset height to auto to allow containers to expand horizontally */
+		top: 0%;
+		align-items: start;
+		justify-content: space-between;
+		display: none;
+	}
+
+
+
+
+
+
+	.roomcode {
+		margin: auto;
+		width: 150px;
+		text-align: center;
+		background-color: #525355;
+		border-radius: 5px;
+		padding: 5px;
+	}
+
+		.roomcode h1 {
+			color: white;
+			margin: auto;
+			vertical-align: middle;
+			font-size: 12px;
+		}
+
+	.footer {
+		display: none;
+	}
+}
