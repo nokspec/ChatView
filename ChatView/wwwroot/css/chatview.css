@@ -293,11 +293,11 @@ li {
 	}
 
 	.messagelist {
-		height: auto;
-		width: auto;
+		height: 235px;
+		width: inherit;
 		word-wrap: break-word;
 		overflow: auto;
-		padding: 0;
+		padding: 0 0 0 5px;
 	}
 
 	.button-message {
@@ -314,11 +314,6 @@ li {
 		justify-content: space-between;
 		display: none;
 	}
-
-
-
-
-
 
 	.roomcode {
 		margin: auto;

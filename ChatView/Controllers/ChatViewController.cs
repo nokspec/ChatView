@@ -1,6 +1,7 @@
 ﻿using ChatView.Models.ChatView;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -10,7 +11,7 @@ namespace ChatView.Controllers
     public class ChatViewController : Controller
     {
         private readonly HttpClient _httpClient;
-        private readonly Regex _youTubeUrlRegex = new Regex(@"/^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+$/");
+        private static readonly Regex _youTubeUrlRegex = new Regex(@"^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+?$", RegexOptions.Compiled);
 
         public ChatViewController(HttpClient httpClient)
         {

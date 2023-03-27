@@ -329,8 +329,10 @@ namespace ChatView.Hubs
                 //delete the user from the room
                 await Groups.RemoveFromGroupAsync(Context.ConnectionId, room.RoomCode);
 
-                Client client = new();
-                client.ConnectionId = Context.ConnectionId;
+                Client client = new()
+                {
+                    ConnectionId = Context.ConnectionId
+                };
 
                 Room roomOut = new Room();
                 client.Muted = false; //Unmute the user if the user was muted.
