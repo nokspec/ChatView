@@ -33,7 +33,7 @@ namespace ChatView.Controllers
             }
             else
             {
-                var apiUrl = "http://localhost:5134/api/chatview/newvideo";
+                var apiUrl = "http://localhost:5205/api/chatview/newvideo";
                 var payload = new NewVideo
                 {
                     Url = url

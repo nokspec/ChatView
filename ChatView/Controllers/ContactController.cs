@@ -1,7 +1,5 @@
-﻿using ChatView.Models;
-using ChatView.Models.Contact;
+﻿using ChatView.Models.Contact;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
 using System.Text;
 
@@ -26,7 +24,7 @@ namespace ChatView.Controllers
         {
             //at this point the object is valid because we have added requirements in the Contact class.
             contactForm.CaptchaToken = HttpContext.Request.Form["g-Recaptcha-Response"]; //get the captcha token
-            var apiUrl = "http://localhost:5134/api/contact/submit";
+            var apiUrl = "http://localhost:5205/api/contact/submit";
             var payload = new Contact
             {
                 Topic = contactForm.Topic,
