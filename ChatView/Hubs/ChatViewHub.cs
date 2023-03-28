@@ -32,7 +32,7 @@ namespace ChatView.Hubs
             Client client = new()
             {
                 ConnectionId = Context.ConnectionId,
-                Username = Context.User.Identity.Name
+                Username = Context.User.Identity.Name //cant be null because a user has to be logged in to be able to enter the application.
             };
 
             // check if room exists, if not, make a new room. Otherwise join it.
@@ -82,6 +82,7 @@ namespace ChatView.Hubs
                 var userToUpdate = ClientRoomDictionary.FirstOrDefault(x => x.Key.Username == username);
                 if (option.Equals("promote") && (userToUpdate.Key.Role != Models.ChatView.Roles.Mod || userToUpdate.Key.Role != Models.ChatView.Roles.Admin))
                 {
+                    userToUpdate.Key.Muted = false;
                     userToUpdate.Key.Role = Models.ChatView.Roles.Mod;
                     //Update videoplayer controls for the promoted user
                     await Clients.Clients(userToUpdate.Key.ConnectionId).SendAsync("AddVideoPlayer");
@@ -126,17 +127,19 @@ namespace ChatView.Hubs
                         //delete the user from the room
                         await Groups.RemoveFromGroupAsync(userToUpdate.Key.ConnectionId, room.RoomCode);
 
-                        Client client = new();
-                        client.ConnectionId = userToUpdate.Key.ConnectionId;
+                        Client client = new()
+                        {
+                            ConnectionId = userToUpdate.Key.ConnectionId,
 
-                        Room roomOut = new Room();
+                        };
+
+                        Room roomOut = new();
                         client.Muted = false; //Unmute the user if the user was muted.
                         client.Role = Models.ChatView.Roles.Viewer; //Set the role to default.
                         ClientRoomDictionary.TryRemove(client, out roomOut);
 
-                        string value;
                         var user = userToUpdate.Key.Username;
-                        Users.TryRemove(user, out value);
+                        Users.TryRemove(user, out string value);
 
                         await Clients.Group(room.RoomCode).SendAsync("ReceiveMessage", userToUpdate.Key.Username, " has been kicked");
                     }
@@ -159,7 +162,7 @@ namespace ChatView.Hubs
         }
 
         /// <summary>
-        /// Gets the client data of the current user
+        /// Returns an object of Client of the current user.
         /// </summary>
         /// <returns></returns>
         public async Task<Client> GetClient()
@@ -311,7 +314,7 @@ namespace ChatView.Hubs
         }
 
         /// <summary>
-        /// Hande the current user disconnecting from a room. 
+        /// Handle the current user disconnecting from a room. 
         /// </summary>
         /// <returns></returns>
         public async Task LeaveRoom()
@@ -320,32 +323,26 @@ namespace ChatView.Hubs
 
             if (room != null)
             {
-                //TODO: when no one is in a room anymore, delete the room.
-                //if (room.Clients.Count == 0)
-                //{
 
-                //}
+                var currentuser = await GetClient();
 
-                //delete the user from the room
-                await Groups.RemoveFromGroupAsync(Context.ConnectionId, room.RoomCode);
+                var client = room.Clients.SingleOrDefault(x => x.ConnectionId == currentuser.ConnectionId);
 
-                Client client = new()
-                {
-                    ConnectionId = Context.ConnectionId
-                };
+                if (client != null) room.Clients.Remove(client);
 
-                Room roomOut = new Room();
-                client.Muted = false; //Unmute the user if the user was muted.
-                client.Role = Models.ChatView.Roles.Viewer; //Set the role to default.
+                Room roomOut = new();
                 ClientRoomDictionary.TryRemove(client, out roomOut);
 
-                string value;
-                var user = Context.User.Identity.Name;
-                Users.TryRemove(user, out value);
+                if (room.Clients.Count == 0) Rooms.Remove(room);
 
-                await Clients.Group(room.RoomCode).SendAsync("ReceiveMessage", user, " has left the room");
-
-                GetUserList();
+                //Remove the user from the list of users
+                Users.TryRemove(client.Username, out string value);
+                //update the user list
+                await GetUserList();
+                //delete the user from the signalr group
+                await Groups.RemoveFromGroupAsync(Context.ConnectionId, room.RoomCode);
+                //notify other users
+                await Clients.Group(room.RoomCode).SendAsync("ReceiveMessage", client.Username, " has left the room");
             }
         }
 
@@ -356,7 +353,7 @@ namespace ChatView.Hubs
         /// <returns></returns>
         public override async Task OnDisconnectedAsync(Exception ex)
         {
-            await LeaveRoom();
+            await LeaveRoom(); //remove the user from the room.
             await base.OnDisconnectedAsync(ex);
         }
 

@@ -218,7 +218,7 @@
 				alert("Please enter a valid URL");
 			}
 		});
-
+		
 		const createRoom = document.getElementById('createRoom');
 		createRoom.addEventListener('click', (event) => {
 			event.preventDefault();
