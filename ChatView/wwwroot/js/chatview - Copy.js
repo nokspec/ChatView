@@ -43,63 +43,70 @@
 			ul.classList.add('list');
 			ul.innerHTML = '';
 			userList.forEach((user) => {
+
+				this.connection.invoke("GetUser");
+				this.connection.on("GetUser", (currentUser) => {
+					//TODO fix dit, currentuser moet You krijgen te zien.
+				})
 				let CurrentUser;
 
 				let li = document.createElement('li');
 				li.textContent = user;
 
+				if (CurrentUser != user) {
 
-				let select = document.createElement('select');
-				let username = user;
+					let select = document.createElement('select');
+					let username = user;
 
-				let choose = document.createElement('option');
-				choose.textContent = "";
-				choose.value = "choose";
+					let choose = document.createElement('option');
+					choose.textContent = "";
+					choose.value = "choose";
+					
+					let promote = document.createElement('option');
+					promote.textContent = "Promote";
+					promote.value = "promote";
 
-				let promote = document.createElement('option');
-				promote.textContent = "Promote";
-				promote.value = "promote";
+					let demote = document.createElement('option');
+					demote.textContent = "Demote";
+					demote.value = "demote";
 
-				let demote = document.createElement('option');
-				demote.textContent = "Demote";
-				demote.value = "demote";
+					let mute = document.createElement('option');
+					mute.textContent = "Mute";
+					mute.value = "mute";
 
-				let mute = document.createElement('option');
-				mute.textContent = "Mute";
-				mute.value = "mute";
+					let unmute = document.createElement('option');
+					unmute.textContent = "Unmute";
+					unmute.value = "unmute";
 
-				let unmute = document.createElement('option');
-				unmute.textContent = "Unmute";
-				unmute.value = "unmute";
+					let kick = document.createElement('option');
+					kick.textContent = "Kick";
+					kick.value = "kick";
 
-				let kick = document.createElement('option');
-				kick.textContent = "Kick";
-				kick.value = "kick";
+					select.appendChild(choose);
+					select.appendChild(promote);
+					select.appendChild(demote);
+					select.appendChild(mute);
+					select.appendChild(unmute);
+					select.appendChild(kick);
 
-				select.appendChild(choose);
-				select.appendChild(promote);
-				select.appendChild(demote);
-				select.appendChild(mute);
-				select.appendChild(unmute);
-				select.appendChild(kick);
+					let initialOptionValue = select.value;
 
-				let initialOptionValue = select.value;
+					select.addEventListener("change", () => {
+						let selectedIndex = select.selectedIndex;
+						let selectedOption = select.options[selectedIndex];
+						console.log(selectedOption.value);
+						console.log(username);
 
-				select.addEventListener("change", () => {
-					let selectedIndex = select.selectedIndex;
-					let selectedOption = select.options[selectedIndex];
-					console.log(selectedOption.value);
-					console.log(username);
+						this.HandleSelectedOption(selectedOption.value, username);
 
-					this.HandleSelectedOption(selectedOption.value, username);
+						setTimeout(function () {
+							select.value = initialOptionValue;
+						}, 500);
+					});
 
-					setTimeout(function () {
-						select.value = initialOptionValue;
-					}, 500);
-				});
-
-				li.appendChild(select);
-				ul.appendChild(li);
+					li.appendChild(select);
+					ul.appendChild(li);
+				}
 			});
 		});
 
@@ -211,7 +218,7 @@
 				alert("Please enter a valid URL");
 			}
 		});
-
+		
 		const createRoom = document.getElementById('createRoom');
 		createRoom.addEventListener('click', (event) => {
 			event.preventDefault();
@@ -298,5 +305,7 @@
 		});
 	}
 }
+
+//const chatView = new ChatView();
 
 export { ChatView };

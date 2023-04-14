@@ -2,6 +2,7 @@
 using ChatView_API.Models.ChatView;
 using ChatView_API.Models.Db_Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
 using YoutubeExplode;
 using YoutubeExplode.Videos.Streams;
@@ -32,49 +33,49 @@ namespace ChatView_API.Controllers
                 try
                 {
                     // Check if video already exists in database
-                    //var existingVideo = await _context.Videos.FirstOrDefaultAsync(v => v.YoutubeUrl == newVideo.Url);
+                    var existingVideo = _context.Videos.FirstOrDefault(v => v.YoutubeUrl == newVideo.Url);
 
-                    //if (existingVideo != null)
-                    //{
-                    //    // Video already exists, return its URL
-                    //    var base64 = Convert.ToBase64String(existingVideo.Mp4Bytes);
-                    //    var existingVideoUrl = $"data:video/mp4;base64,{base64}";
-                    //    return Ok(existingVideoUrl);
-                    //}
-                    //else
-                    //{
-                    // Video does not exist, download it
-                    var youtube = new YoutubeClient();
-                    var videoUrl = newVideo.Url;
-                    var streamManifest = await youtube.Videos.Streams.GetManifestAsync(videoUrl);
-
-                    // get the highest quality stream that has both audio and video
-                    var streamInfo = streamManifest.GetMuxedStreams().GetWithHighestVideoQuality();
-
-                    var stream = await youtube.Videos.Streams.GetAsync(streamInfo);
-
-                    // Download the stream to a byte array
-                    byte[] mp4Bytes;
-                    using (var ms = new MemoryStream())
+                    if (existingVideo != null)
                     {
-                        await stream.CopyToAsync(ms);
-                        mp4Bytes = ms.ToArray();
+                        // Video already exists, return its URL
+                        var base64 = Convert.ToBase64String(existingVideo.Mp4Bytes);
+                        var existingVideoUrl = $"data:video/mp4;base64,{base64}";
+                        return Ok(existingVideoUrl);
                     }
-
-                    // Save the MP4 bytes to the database
-                    var video = new DbVideo
+                    else
                     {
-                        YoutubeUrl = videoUrl,
-                        Mp4Bytes = mp4Bytes
-                    };
-                    //_context.Videos.Add(video);
-                    //await _context.SaveChangesAsync();
+                        // Video does not exist in Db, download it
+                        var youtube = new YoutubeClient();
+                        var videoUrl = newVideo.Url;
+                        var streamManifest = await youtube.Videos.Streams.GetManifestAsync(videoUrl);
 
-                    // Convert MP4 bytes to base64 string and return
-                    var base64 = Convert.ToBase64String(mp4Bytes);
-                    var newVideoUrl = $"data:video/mp4;base64,{base64}";
-                    return Ok(newVideoUrl);
-                    //}
+                        // get the highest quality stream that has both audio and video
+                        var streamInfo = streamManifest.GetMuxedStreams().GetWithHighestVideoQuality();
+
+                        var stream = await youtube.Videos.Streams.GetAsync(streamInfo);
+
+                        // Download the stream to a byte array
+                        byte[] mp4Bytes;
+                        using (var ms = new MemoryStream())
+                        {
+                            await stream.CopyToAsync(ms);
+                            mp4Bytes = ms.ToArray();
+                        }
+
+                        // Save the MP4 bytes to the database
+                        var video = new DbVideo
+                        {
+                            YoutubeUrl = videoUrl,
+                            Mp4Bytes = mp4Bytes
+                        };
+                        _context.Videos.Add(video);
+                        await _context.SaveChangesAsync();
+
+                        // Convert MP4 bytes to base64 string and return
+                        var base64 = Convert.ToBase64String(mp4Bytes);
+                        var newVideoUrl = $"data:video/mp4;base64,{base64}";
+                        return Ok(newVideoUrl);
+                    }
                 }
                 catch (Exception ex)
                 {
