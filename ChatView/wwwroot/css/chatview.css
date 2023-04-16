@@ -303,7 +303,7 @@ li {
 	}
 
 	.messagelist {
-		height: 25%;
+		height: auto;
 		width: auto;
 		word-wrap: break-word;
 		overflow: auto;

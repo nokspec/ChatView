@@ -105,6 +105,7 @@
 
 		this.connection.on('SetVideo', (url) => {
 			$('#videoSource').attr('src', url);
+			console.log("nu hier");
 			$('#videoplayer').get(0).load();
 		});
 
@@ -265,7 +266,7 @@
 			success: function (data) {
 				$('#videoSource').attr('src', data);
 				self.connection.invoke('SetVideo', data);
-				$('#videoplayer').get(0).load();
+				console.log("video set FetchVideo lala")
 			},
 			error: function (error) {
 				console.log(error);

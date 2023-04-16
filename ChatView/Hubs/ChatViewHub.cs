@@ -125,6 +125,7 @@ namespace ChatView.Hubs
                         await RemoveUser(userToUpdate, room); //handle removing the user 
 
                         await Clients.Group(room.RoomCode).SendAsync("ReceiveMessage", userToUpdate.Key.Username, " has been kicked");
+                        await GetUserList();
                     }
                     else
                     {
