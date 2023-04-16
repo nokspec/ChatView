@@ -20,34 +20,35 @@
 </container>
 
 <container id="room" class="room">
-    <div class="container-wrapper">
-        <div class="roomcode">
-            <h1 id="roomId"></h1>
-        </div>
+    <div class="roomcode">
+        <h1 id="roomId"></h1>
+    </div>
 
-        <asp:UpdatePanel ID="urlUpdatePanel" runat="server">
-            <ContentTemplate>
-                <div class="urlbox">
-                    <form id="videoForm" method="post" autocomplete="off">
-                        <div class="url-container">
-                            <input type="text" id="URL" name="URL" placeholder="Youtube video URL" />
-                            <input type="submit" value="Submit" class="button-urlbox" />
-                            <div class="spinner"></div>
-                        </div>
-                    </form>
-                </div>
-            </ContentTemplate>
-        </asp:UpdatePanel>
-
-        <section class="video-player">
-            <div class="video-container">
-                <div class="video-mask">
-                    <video id="videoplayer">
-                        <source id="videoSource" type="video/mp4">
-                    </video>
-                </div>
+    <asp:UpdatePanel ID="urlUpdatePanel" runat="server">
+        <ContentTemplate>
+            <div class="urlbox">
+                <form id="videoForm" method="post" autocomplete="off">
+                    <div class="url-container">
+                        <input type="text" id="URL" name="URL" placeholder="Youtube video URL" />
+                        <input type="submit" value="Submit" class="button-urlbox" />
+                        <div class="spinner"></div>
+                    </div>
+                </form>
             </div>
-        </section>
+        </ContentTemplate>
+    </asp:UpdatePanel>
+
+    <section class="video-player">
+        <div class="video-container">
+            <div class="video-mask">
+                <video id="videoplayer">
+                    <source id="videoSource" type="video/mp4">
+                </video>
+            </div>
+        </div>
+    </section>
+
+    <div class="container-wrapper">
 
         <section class="chatbox">
             <div class="chatbox-container ">
@@ -73,4 +74,5 @@
             </ContentTemplate>
         </asp:UpdatePanel>
     </div>
+
 </container>

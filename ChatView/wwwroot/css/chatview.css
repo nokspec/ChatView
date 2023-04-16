@@ -239,53 +239,7 @@ li {
 
 /**/
 
-@media (max-width: 1000) {
-	.video-container {
-		all: unset;
-	}
-
-	video {
-		margin: 60px 0 0 0;
-		height: auto;
-		width: 50%;
-		object-fit: fill;
-		position: absolute;
-	}
-
-	.container-wrapper {
-		display: flex;
-		flex-direction: column;
-	}
-
-	.usersbox-container {
-		flex-wrap: nowrap;
-		height: auto; /* Reset height to auto to allow containers to expand horizontally */
-		top: 0%;
-		align-items: start;
-		justify-content: space-between;
-		display: none;
-	}
-
-	.chatbox-container {
-		width: 100%;
-		height: 300px;
-		left: unset;
-		transform: none;
-		padding: unset;
-		margin-top: 0;
-		display: inline;
-	}
-
-	.messagelist {
-		height: 235px;
-		width: inherit;
-		word-wrap: break-word;
-		overflow: auto;
-		padding: 0 0 0 5px;
-	}
-}
-
-@media (max-width: 650px) {
+@media (min-width: 901px) and (max-width: 1900px) {
 	body {
 		width: auto;
 	}
@@ -295,10 +249,84 @@ li {
 		width: 70%;
 	}
 
-	/*.container-wrapper {
-		display: flex;
-		flex-direction: column;
-	}*/
+	.url-container {
+		margin: 10px 0;
+	}
+
+	.urlbox {
+		padding: 0;
+		margin: 0;
+	}
+
+	.button-urlbox {
+		margin: 5px;
+		padding: 0;
+		float: left;
+	}
+
+	.video-container {
+		all: unset;
+		float: left;
+		width: 50%;
+	}
+
+	video {
+		margin: 105px 0 0 20px;
+		height: auto;
+		width: 60%;
+		object-fit: fill;
+		position: absolute;
+	}
+
+	.chatbox-container {
+		width: 25%;
+		height: 300px;
+		top: 20%;
+		left: 65%;
+		transform: none;
+		padding: unset;
+		margin-top: 0;
+		display: inline;
+		padding: 10px;
+	}
+
+	.usersbox-container {
+		width: 25%;
+		height: 300px;
+		top: 55%;
+		left: 65%;
+		transform: none;
+		padding: unset;
+		margin-top: 0;
+		display: inline;
+		padding: 10px;
+	}
+
+	.messagelist {
+		height: 25%;
+		width: auto;
+		word-wrap: break-word;
+		overflow: auto;
+		padding: 0 0 0 5px;
+	}
+
+	.button-message {
+		padding: 0;
+		float: right;
+		position: absolute;
+	}
+}
+
+
+@media (max-width: 900px) {
+	body {
+		width: auto;
+	}
+
+	input[type=text] {
+		margin: 5px;
+		width: 70%;
+	}
 
 	.url-container {
 		margin: 10px 0;
@@ -321,7 +349,6 @@ li {
 	}
 
 	video {
-		margin: 60px 0 0 0;
 		height: auto;
 		width: 100%;
 		object-fit: fill;
@@ -338,6 +365,15 @@ li {
 		display: inline;
 	}
 
+	.usersbox-container {
+		flex-wrap: nowrap;
+		height: auto; /* Reset height to auto to allow containers to expand horizontally */
+		top: 0%;
+		align-items: start;
+		justify-content: space-between;
+		display: none;
+	}
+
 	.messagelist {
 		height: 235px;
 		width: inherit;
@@ -352,14 +388,7 @@ li {
 		position: absolute;
 	}
 
-	.usersbox-container {
-		flex-wrap: nowrap;
-		height: auto; /* Reset height to auto to allow containers to expand horizontally */
-		top: 0%;
-		align-items: start;
-		justify-content: space-between;
-		display: none;
-	}
+
 
 	.roomcode {
 		margin: auto;
