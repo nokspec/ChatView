@@ -49,7 +49,7 @@ namespace ChatView.Controllers
 
                     return Json(videoUrlTrimmed);
                 }
-                return View("Index");
+                return View("ChatView");
             }
         }
     }
