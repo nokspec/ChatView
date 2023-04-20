@@ -30,16 +30,6 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
     options.MinimumSameSitePolicy = SameSiteMode.None;
 });
 
-builder.Services.Configure<CookieAuthenticationOptions>(options =>
-{
-    options.LoginPath = "/Account/Login";
-    options.LogoutPath = "/Account/Logout";
-    options.AccessDeniedPath = "/Account/AccessDenied";
-    options.Cookie.Domain = "yourdomain.com";
-    options.Cookie.SameSite = SameSiteMode.Strict;
-});
-
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
