@@ -11,12 +11,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 //var connectionString = builder.Configuration.GetConnectionString("ChatViewDbContext");
-var connectionStringTest = builder.Configuration.GetConnectionString("ChatViewDbContext");
+var connectionStringTest = builder.Configuration.GetConnectionString("AcceptanceDbConnection");
 
 //builder.Services.AddDbContext<ChatViewDbContext>(x => x.UseSqlServer(connectionString));
 //builder.Services.AddDbContext<ChatViewDbContext>(x => x.UseSqlServer(connectionStringTest));
 builder.Services.AddDbContext<ChatViewDbContext>(options =>
-    options.UseSqlServer(builder.Configuration["ConnectionStrings:TestDbContext"]));
+    options.UseSqlServer(builder.Configuration["ConnectionStrings:AcceptanceDbConnection"]));
 
 var app = builder.Build();
 

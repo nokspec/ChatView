@@ -5,12 +5,12 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 //var connectionString = builder.Configuration.GetConnectionString("ChatViewContextConnection") ?? throw new InvalidOperationException("Connection string 'ChatViewContextConnection' not found.");
-var connectionStringTest = builder.Configuration.GetConnectionString("TestDbContext") ?? throw new InvalidOperationException("Connection string 'TestDbContext' not found.");
+var connectionStringTest = builder.Configuration.GetConnectionString("AcceptanceDbConnection") ?? throw new InvalidOperationException("Connection string 'AcceptanceDbConnection' not found.");
 
 //builder.Services.AddDbContext<ChatViewContext>(options => options.UseSqlServer(connectionString));
 //builder.Services.AddDbContext<ChatViewContext>(options => options.UseSqlServer(connectionStringTest));
 builder.Services.AddDbContext<ChatViewContext>(options =>
-    options.UseSqlServer(builder.Configuration["ConnectionStrings:TestDbContext"]));
+    options.UseSqlServer(builder.Configuration["ConnectionStrings:AcceptanceDbConnection"]));
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ChatViewContext>();
 
