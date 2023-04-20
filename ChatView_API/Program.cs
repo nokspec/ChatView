@@ -11,8 +11,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var connectionString = builder.Configuration.GetConnectionString("ChatViewDbContext");
-builder.Services.AddDbContext<ChatViewDbContext>(x => x.UseSqlServer(connectionString));
 var connectionStringTest = builder.Configuration.GetConnectionString("ChatViewDbContext");
+
+//builder.Services.AddDbContext<ChatViewDbContext>(x => x.UseSqlServer(connectionString));
 builder.Services.AddDbContext<ChatViewDbContext>(x => x.UseSqlServer(connectionStringTest));
 
 var app = builder.Build();
