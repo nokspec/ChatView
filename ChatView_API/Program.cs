@@ -14,7 +14,9 @@ builder.Services.AddSwaggerGen();
 var connectionStringTest = builder.Configuration.GetConnectionString("ChatViewDbContext");
 
 //builder.Services.AddDbContext<ChatViewDbContext>(x => x.UseSqlServer(connectionString));
-builder.Services.AddDbContext<ChatViewDbContext>(x => x.UseSqlServer(connectionStringTest));
+//builder.Services.AddDbContext<ChatViewDbContext>(x => x.UseSqlServer(connectionStringTest));
+builder.Services.AddDbContext<ChatViewDbContext>(options =>
+    options.UseSqlServer(builder.Configuration["ConnectionStrings:TestDbContext"]));
 
 var app = builder.Build();
 
