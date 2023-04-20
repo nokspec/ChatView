@@ -28,7 +28,7 @@
 		while (ul.firstChild) ul.removeChild(ul.firstChild);
 
 		this.connection.invoke("GetUserList").then((result) => {
-			console.log(result);
+			//console.log(result);
 			result.forEach((user) => {
 				var li = document.createElement('li');
 				li.textContent = user;
@@ -43,11 +43,8 @@
 			ul.classList.add('list');
 			ul.innerHTML = '';
 			userList.forEach((user) => {
-				let CurrentUser;
-
 				let li = document.createElement('li');
 				li.textContent = user;
-
 
 				let select = document.createElement('select');
 				let username = user;
@@ -88,8 +85,8 @@
 				select.addEventListener("change", () => {
 					let selectedIndex = select.selectedIndex;
 					let selectedOption = select.options[selectedIndex];
-					console.log(selectedOption.value);
-					console.log(username);
+					//console.log(selectedOption.value);
+					//console.log(username);
 
 					this.HandleSelectedOption(selectedOption.value, username);
 
@@ -105,7 +102,6 @@
 
 		this.connection.on('SetVideo', (url) => {
 			$('#videoSource').attr('src', url);
-			console.log("nu hier");
 			$('#videoplayer').get(0).load();
 		});
 
@@ -162,39 +158,39 @@
 
 	bindEvents() {
 		this.videoPlayer.addEventListener("play", () => {
-			console.log("play");
+			//console.log("play");
 			this.connection.invoke('Play');
 			this.connection.invoke("TimeUpdate", this.videoPlayer.currentTime);
 		});
 
 		this.videoPlayer.addEventListener("pause", () => {
 			if (this.videoPlayer.play) {
-				console.log("pause")
+				//console.log("pause")
 				this.connection.invoke('Pause');
 				this.connection.invoke("TimeUpdate", this.videoPlayer.currentTime);
 			}
 		});
 
 		this.videoPlayer.addEventListener('seeked', () => {
-			console.log("seeked");
+			//console.log("seeked");
 			this.connection.invoke('Seek', this.videoPlayer.currentTime);
 			this.connection.invoke("TimeUpdate", this.videoPlayer.currentTime);
 		});
 	}
 
 	updatePlayState(isPlaying) {
-		console.log("UpdatePlayState");
+		//console.log("UpdatePlayState");
 		if (this.videoPlayer.paused && isPlaying) {
-			console.log("play")
+			//console.log("play")
 			this.videoPlayer.play();
 		} else if (!this.videoPlayer.paused && !isPlaying) {
-			console.log("pause")
+			//console.log("pause")
 			this.videoPlayer.pause();
 		}
 	}
 
 	updateTime(currentTime) {
-		console.log("sync");
+		//console.log("sync");
 		this.videoPlayer.currentTime = currentTime;
 	}
 
@@ -266,10 +262,9 @@
 			success: function (data) {
 				$('#videoSource').attr('src', data);
 				self.connection.invoke('SetVideo', data);
-				console.log("video set FetchVideo lala")
 			},
 			error: function (error) {
-				console.log(error);
+				//console.log(error);
 			}
 		});
 	}
@@ -295,7 +290,6 @@
 			else {
 				alert("Please enter a message");
 			}
-
 		});
 	}
 }

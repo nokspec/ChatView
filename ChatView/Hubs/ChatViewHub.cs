@@ -190,7 +190,6 @@ namespace ChatView.Hubs
                     await Clients.Group(room.RoomCode).SendAsync("createUserList", result);
                 }
             }
-            
             return result;
         }
 
