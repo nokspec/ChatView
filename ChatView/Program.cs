@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ChatView.Data;
 using ChatView.Hubs;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("ChatViewContextConnection") ?? throw new InvalidOperationException("Connection string 'ChatViewContextConnection' not found.");
@@ -11,6 +12,7 @@ builder.Services.AddDbContext<ChatViewContext>(options => options.UseSqlServer(c
 builder.Services.AddDbContext<ChatViewContext>(options => options.UseSqlServer(connectionStringTest));
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ChatViewContext>();
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
