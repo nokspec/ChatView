@@ -9,7 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionStringTest = builder.Configuration.GetConnectionString("TestDbContext") ?? throw new InvalidOperationException("Connection string 'TestDbContext' not found.");
 
 //builder.Services.AddDbContext<ChatViewContext>(options => options.UseSqlServer(connectionString));
-builder.Services.AddDbContext<ChatViewContext>(options => options.UseSqlServer(connectionStringTest));
+//builder.Services.AddDbContext<ChatViewContext>(options => options.UseSqlServer(connectionStringTest));
+builder.Services.AddDbContext<ChatViewContext>(options =>
+    options.UseSqlServer(builder.Configuration["ConnectionStrings:TestDbContext"]));
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ChatViewContext>();
 
