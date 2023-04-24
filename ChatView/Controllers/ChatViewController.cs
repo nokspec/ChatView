@@ -49,6 +49,7 @@ namespace ChatView.Controllers
                     var videoUrl = await response.Content.ReadAsStringAsync();
                     var videoUrlTrimmed = string.Concat(videoUrl.Where(c => !Char.IsWhiteSpace(c)));
 
+                    Console.WriteLine("Nu hoort yt video te komen");
                     return Json(videoUrlTrimmed);
                 }
                 return View("ChatView");
