@@ -34,7 +34,7 @@ namespace ChatView.Controllers
             }
             else
             {
-                var apiUrl = "http://145.44.234.126:5001/api/chatview/newvideo";
+                var apiUrl = "http://145.44.234.126/api/chatview/newvideo";
                 var payload = new NewVideo
                 {
                     Url = url
