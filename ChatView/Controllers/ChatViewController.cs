@@ -27,6 +27,7 @@ namespace ChatView.Controllers
         [HttpPost]
         public async Task<IActionResult> DownloadVideo(string url)
         {
+            Console.WriteLine("Nu API call MAKEN");
             if (string.IsNullOrEmpty(url) || !_youTubeUrlRegex.IsMatch(url))
             {
                 return BadRequest("Invalid URL");
