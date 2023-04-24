@@ -23,11 +23,11 @@ builder.Services.AddSignalR(options =>
     options.MaximumReceiveMessageSize = 1024 * 1024 * 100; // 100 MB
 });
 
-builder.Services.Configure<CookiePolicyOptions>(options =>
-{
-    options.CheckConsentNeeded = context => true;
-    options.MinimumSameSitePolicy = SameSiteMode.None;
-});
+//builder.Services.Configure<CookiePolicyOptions>(options =>
+//{
+//    options.CheckConsentNeeded = context => true;
+//    options.MinimumSameSitePolicy = SameSiteMode.None;
+//});
 
 var app = builder.Build();
 
