@@ -33,17 +33,17 @@ namespace ChatView_API.Controllers
                 try
                 {
                     // Check if video already exists in database
-                    var existingVideo = _context.Videos.FirstOrDefault(v => v.YoutubeUrl == newVideo.Url);
+                    //var existingVideo = _context.Videos.FirstOrDefault(v => v.YoutubeUrl == newVideo.Url);
 
-                    if (existingVideo != null)
-                    {
-                        // Video already exists, return its URL
-                        var base64 = Convert.ToBase64String(existingVideo.Mp4Bytes);
-                        var existingVideoUrl = $"data:video/mp4;base64,{base64}";
-                        return Ok(existingVideoUrl);
-                    }
-                    else
-                    {
+                    //if (existingVideo != null)
+                    //{
+                    //    // Video already exists, return its URL
+                    //    var base64 = Convert.ToBase64String(existingVideo.Mp4Bytes);
+                    //    var existingVideoUrl = $"data:video/mp4;base64,{base64}";
+                    //    return Ok(existingVideoUrl);
+                    //}
+                    //else
+                    //{
                         // Video does not exist in Db, download it
                         var youtube = new YoutubeClient();
                         var videoUrl = newVideo.Url;
@@ -68,14 +68,14 @@ namespace ChatView_API.Controllers
                             YoutubeUrl = videoUrl,
                             Mp4Bytes = mp4Bytes
                         };
-                        _context.Videos.Add(video);
-                        await _context.SaveChangesAsync();
+                        //_context.Videos.Add(video);
+                        //await _context.SaveChangesAsync();
 
                         // Convert MP4 bytes to base64 string and return
                         var base64 = Convert.ToBase64String(mp4Bytes);
                         var newVideoUrl = $"data:video/mp4;base64,{base64}";
                         return Ok(newVideoUrl);
-                    }
+                    //}
                 }
                 catch (Exception ex)
                 {
