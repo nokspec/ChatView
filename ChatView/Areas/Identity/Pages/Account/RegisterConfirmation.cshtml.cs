@@ -71,6 +71,8 @@ namespace ChatView.Areas.Identity.Pages.Account
                     pageHandler: null,
                     values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                     protocol: Request.Scheme);
+
+                return Redirect(EmailConfirmationUrl);
             }
 
             return Page();
