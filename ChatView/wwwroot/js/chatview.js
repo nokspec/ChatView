@@ -253,20 +253,20 @@
 
 	fetchVideo(url) {
 		this.urlLoading();
-		const self = this;
-		const response = await fetch('/ChatView/DownloadVideo', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
+		var self = this;
+		var url = $('#URL').val();
+		$.ajax({
+			url: '/ChatView/DownloadVideo',
+			type: 'POST',
+			data: { url: url },
+			success: function (data) {
+				$('#videoSource').attr('src', data);
+				self.connection.invoke('SetVideo', data);
 			},
-			body: JSON.stringify({ url })
+			error: function (error) {
+				//console.log(error);
+			}
 		});
-		if (!response.ok) {
-			throw new Error('Failed to download video');
-		}
-		const data = await response.json();
-		$('#videoSource').attr('src', data);
-		self.connection.invoke('SetVideo', data);
 	}
 
 	resetForm() {

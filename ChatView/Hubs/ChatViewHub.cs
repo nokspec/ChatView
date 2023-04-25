@@ -349,8 +349,6 @@ namespace ChatView.Hubs
                 Room roomOut = new();
                 ClientRoomDictionary.TryRemove(client, out roomOut);
 
-                if (room.Clients.Count == 0) Rooms.Remove(room);
-
                 //Remove the user from the list of users
                 Users.TryRemove(client.Username, out string value);
                 //update the user list
@@ -359,6 +357,11 @@ namespace ChatView.Hubs
                 await Groups.RemoveFromGroupAsync(Context.ConnectionId, room.RoomCode);
                 //notify other users
                 await Clients.Group(room.RoomCode).SendAsync("ReceiveMessage", client.Username, " has disconnected");
+                if (room.Clients.Count == 0)
+                {
+                    Rooms.Remove(room);
+                    Console.WriteLine("Room verwijderd");
+                }
             }
         }
 
