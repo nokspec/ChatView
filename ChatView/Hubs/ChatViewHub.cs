@@ -344,6 +344,8 @@ namespace ChatView.Hubs
 
                 var client = room.Clients.SingleOrDefault(x => x.ConnectionId == currentuser.ConnectionId);
 
+                Console.WriteLine($"Huidige lijst: {room.Clients}");
+
                 if (client != null)
                 {
                     Console.WriteLine("Client wordt verwijderd uit lijst");
