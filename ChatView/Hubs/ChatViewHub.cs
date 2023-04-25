@@ -179,7 +179,7 @@ namespace ChatView.Hubs
         {
             var room = await GetRoom();
             List<string> result = new();
-            if(room != null)
+            if (room != null)
             {
                 foreach (var user in Users)
                 {
@@ -334,9 +334,9 @@ namespace ChatView.Hubs
             {
                 var currentuser = await GetClient();
 
-                if(currentuser.ConnectionId == room.OwnerId) //als degene die leavt ook de owner is van de room
+                if (currentuser.ConnectionId == room.OwnerId) //als degene die leavt ook de owner is van de room
                 {
-                    foreach(var user in ClientRoomDictionary)
+                    foreach (var user in ClientRoomDictionary)
                     {
                         await RemoveUser(user, room);
                     }
@@ -344,7 +344,16 @@ namespace ChatView.Hubs
 
                 var client = room.Clients.SingleOrDefault(x => x.ConnectionId == currentuser.ConnectionId);
 
-                if (client != null) room.Clients.Remove(client);
+                if (client != null)
+                {
+                    Console.WriteLine("Client wordt verwijderd uit lijst");
+                    room.Clients.Remove(client);
+                }
+                if (!room.Clients.Any()) //if the list is empty
+                {
+                    Rooms.Remove(room);
+                    Console.WriteLine("Room verwijderd");
+                }
 
                 Room roomOut = new();
                 ClientRoomDictionary.TryRemove(client, out roomOut);
@@ -357,11 +366,8 @@ namespace ChatView.Hubs
                 await Groups.RemoveFromGroupAsync(Context.ConnectionId, room.RoomCode);
                 //notify other users
                 await Clients.Group(room.RoomCode).SendAsync("ReceiveMessage", client.Username, " has disconnected");
-                if (room.Clients.Count == 0)
-                {
-                    Rooms.Remove(room);
-                    Console.WriteLine("Room verwijderd");
-                }
+
+
             }
         }
 
