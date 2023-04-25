@@ -143,7 +143,6 @@ namespace ChatView.Hubs
             Client client = new()
             {
                 ConnectionId = userToUpdate.Key.ConnectionId,
-
             };
 
             Room roomOut = new();
@@ -329,6 +328,7 @@ namespace ChatView.Hubs
         public async Task LeaveRoom()
         {
             var room = await GetRoom();
+            Console.WriteLine(room);
 
             if (room != null)
             {
@@ -343,8 +343,7 @@ namespace ChatView.Hubs
                 }
 
                 var client = room.Clients.SingleOrDefault(x => x.ConnectionId == currentuser.ConnectionId);
-
-                Console.WriteLine($"Huidige lijst: {room.Clients}");
+                Console.WriteLine($"Deze user wordt verwijderd: {client.Username}");
 
                 if (client != null)
                 {
@@ -368,8 +367,6 @@ namespace ChatView.Hubs
                 await Groups.RemoveFromGroupAsync(Context.ConnectionId, room.RoomCode);
                 //notify other users
                 await Clients.Group(room.RoomCode).SendAsync("ReceiveMessage", client.Username, " has disconnected");
-
-
             }
         }
 
@@ -380,6 +377,7 @@ namespace ChatView.Hubs
         /// <returns></returns>
         public override async Task OnDisconnectedAsync(Exception ex)
         {
+            Console.WriteLine("User is gedisconnected");
             await LeaveRoom(); //remove the user from the room.
             await base.OnDisconnectedAsync(ex);
         }
