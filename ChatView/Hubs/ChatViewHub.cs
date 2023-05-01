@@ -183,7 +183,10 @@ namespace ChatView.Hubs
             {
                 foreach (var user in Users)
                 {
-                    if (user.Value == room.RoomCode && !result.Contains(user.Value)) result.Add(user.Key);
+                    if (user.Value == room.RoomCode && !result.Contains(user.Value))
+                    {
+                        result.Add(user.Key);
+                    }
                 }
                 if (result.Count != 0)
                 {
@@ -371,6 +374,8 @@ namespace ChatView.Hubs
         {
             await LeaveRoom(); //remove the user from the room.
             await base.OnDisconnectedAsync(ex);
+            Console.WriteLine("User dcd");
+            
         }
 
         /// <summary>
