@@ -20,8 +20,4 @@
     <PackageReference Include="YoutubeExplode" Version="6.2.11" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="NewFolder\" />
-  </ItemGroup>
-
 </Project>
