@@ -18,8 +18,8 @@ namespace ChatView.Hubs
         private static bool _isPlaying;
         private static double _currentTime;
 
-        private static readonly List<Room> Rooms = new();
-        private static readonly ConcurrentDictionary<Client, Room> ClientRoomDictionary = new();
+        public List<Room> Rooms = new();
+        public ConcurrentDictionary<Client, Room> ClientRoomDictionary = new();
         private static readonly ConcurrentDictionary<string, string> Users = new();
 
         /// <summary>
@@ -47,23 +47,23 @@ namespace ChatView.Hubs
                 };
                 Rooms.Add(room);
                 client.Role = Models.ChatView.Roles.Admin;
-                await Clients.Clients(client.ConnectionId).SendAsync("AddVideoPlayer");
+                //await Clients.Clients(client.ConnectionId).SendAsync("AddVideoPlayer");
             }
             else
             {
                 client.Role = Models.ChatView.Roles.Viewer;
                 room.Clients.Add(client); // Add the client to the list of clients in the existing room.
             }
-            await Groups.AddToGroupAsync(Context.ConnectionId, roomcode);
+            //await Groups.AddToGroupAsync(Context.ConnectionId, roomcode);
 
             ClientRoomDictionary.TryAdd(client, room);
 
             var user = Context.User.Identity.Name;
             Users.TryAdd(user, room.RoomCode);
 
-            await Clients.Group(room.RoomCode).SendAsync("ReceiveMessage", user, " has joined the room");
+            //await Clients.Group(room.RoomCode).SendAsync("ReceiveMessage", user, " has joined the room");
 
-            await GetUserList();
+            //await GetUserList();
 
             if (room.VideoUrl != null) //If theres a video already being played.
             {
@@ -400,5 +400,7 @@ namespace ChatView.Hubs
                 await Clients.Clients(user.Key.ConnectionId).SendAsync("UserMuted");
             }
         }
+
+
     }
 }
