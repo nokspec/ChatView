@@ -15,16 +15,29 @@ jobs:
         run: dotnet restore
       - name: Build .NET App
         run: dotnet build
-      - name: Publish application
-        run: dotnet publish -c Releae -o publish/
+      - name: Run unit tests on Server
+        working-directory: ./ChatView
+        run: dotnet test
       - name: Copy files to server
-        uses: appleboy/scp-action@master
-        with: 
-          host: ${{ env.SERVER_IP }}
-          username: ${{ env.USERNAME }}
-          key: ${{ secrets.SERVER_KEY }}
-          source: publish/
-          target: ${{ env.REMOTE_DIRECTORY }}
+        uses: appleboy/scp-action@main
+        with:
+            host: ${{ env.SERVER_IP }}
+            username: ${{ env.USERNAME }}
+            key: ${{ secrets.SERVER_KEY }}
+            source: publish/
+            target: ${{ env.REMOTE_DIRECTORY }}
+      - name: Run migration on API
+        working-directory: ./ChatView_API
+        run: dotnet ef database update
+      - name: Run migration on Server
+        working-directory: ./ChatView
+        run: dotnet ef database update
+      - name: Publish application
+        working-directory: ./ChatView_API
+        run: dotnet publish -c Release -o publish
+      - name: Publish application
+        working-directory: ./ChatView
+        run: dotnet publish -c Release -o publish
           
         
   Explore-GitHub-Actions:
