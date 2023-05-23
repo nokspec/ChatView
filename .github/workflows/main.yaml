@@ -24,7 +24,7 @@ jobs:
             host: ${{ env.SERVER_IP }}
             username: ${{ env.USERNAME }}
             key: ${{ secrets.SERVER_KEY }}
-            source: publish/
+            source: publish
             target: ${{ env.REMOTE_DIRECTORY }}
       - name: Run migration on API
         working-directory: ./ChatView_API
