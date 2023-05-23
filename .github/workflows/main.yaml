@@ -7,7 +7,7 @@ env:
   REMOTE_DIRECTORY: <remote-directory>
 jobs:
   deploy:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
