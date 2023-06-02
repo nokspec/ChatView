@@ -24,7 +24,7 @@ namespace ChatView.Controllers
         {
             //at this point the object is valid because we have added requirements in the Contact class.
             contactForm.CaptchaToken = HttpContext.Request.Form["g-Recaptcha-Response"]; //get the captcha token
-            var apiUrl = "http://145.44.234.126:5001/api/contact/submit";
+            var apiUrl = "http://localhost/api/contact/submit";
             var payload = new Contact
             {
                 Topic = contactForm.Topic,
