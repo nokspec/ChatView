@@ -23,11 +23,13 @@ builder.Services.AddSignalR(options =>
     options.MaximumReceiveMessageSize = 1024 * 1024 * 100; // 100 MB
 });
 
-//builder.Services.Configure<CookiePolicyOptions>(options =>
-//{
-//    options.CheckConsentNeeded = context => true;
-//    options.MinimumSameSitePolicy = SameSiteMode.None;
-//});
+
+builder.Services.Configure<CookiePolicyOptions>(options =>
+{
+    options.CheckConsentNeeded = context => true;
+    options.MinimumSameSitePolicy = SameSiteMode.None;
+    options.Secure = CookieSecurePolicy.Always;
+});
 
 var app = builder.Build();
 
@@ -39,6 +41,14 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.Use(async (context, next) =>
+{
+	context.Response.Headers.Add("Content-Security-Policy", "default-src 'self';");
+	context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
+    context.Response.Headers.Add("Referrer-Policy", "no-referrer");
+    await next();
+});
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
@@ -46,6 +56,7 @@ app.UseCookiePolicy();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

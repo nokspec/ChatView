@@ -27,6 +27,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.Use(async (context, next) =>
+{
+	context.Response.Headers.Add("Content-Security-Policy", "default-src 'self';");
+	context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
+	context.Response.Headers.Add("Referrer-Policy", "no-referrer");
+	await next();
+});
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

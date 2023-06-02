@@ -14,7 +14,7 @@ namespace ChatView_API.Controllers
     public class ChatViewController : ControllerBase
     {
         private readonly ChatViewDbContext _context;
-        private static readonly Regex _youTubeUrlRegex = new Regex(@"^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+?$", RegexOptions.Compiled);
+        private static readonly Regex _youTubeUrlRegex = new(@"^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+?$", RegexOptions.Compiled);
 
         public ChatViewController(ChatViewDbContext context)
         {
