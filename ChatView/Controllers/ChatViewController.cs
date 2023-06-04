@@ -27,7 +27,6 @@ namespace ChatView.Controllers
         [HttpPost]
         public async Task<IActionResult> DownloadVideo(string url)
         {
-            Console.WriteLine("Nu API call MAKEN");
             if (string.IsNullOrEmpty(url) || !_youTubeUrlRegex.IsMatch(url))
             {
                 return BadRequest("Invalid URL");
@@ -49,7 +48,6 @@ namespace ChatView.Controllers
                     var videoUrl = await response.Content.ReadAsStringAsync();
                     var videoUrlTrimmed = string.Concat(videoUrl.Where(c => !Char.IsWhiteSpace(c)));
 
-                    Console.WriteLine("Nu hoort yt video te komen");
                     return Json(videoUrlTrimmed);
                 }
                 return View("ChatView");
