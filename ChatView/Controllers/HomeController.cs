@@ -29,15 +29,15 @@ namespace ChatView.Controllers
 
         public void UpdatePageViewCookie()
         {
-            var currentCookieValue = Request.Cookies[PageViewCount];
+            ViewBag.PageViewCount = Request.Cookies[PageViewCount];
 
-            if (currentCookieValue == null)
+            if (ViewBag.PageViewCount == null)
             {
                 Response.Cookies.Append(PageViewCount, "1");
             }
             else
             {
-                var newCookieValue = short.Parse(currentCookieValue) + 1;
+                var newCookieValue = short.Parse(ViewBag.PageViewCount) + 1;
 
                 Response.Cookies.Append(PageViewCount, newCookieValue.ToString());
             }
