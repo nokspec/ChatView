@@ -43,8 +43,8 @@ if (!app.Environment.IsDevelopment())
 
 app.Use(async (context, next) =>
 {
-	context.Response.Headers.Add("Content-Security-Policy", "media-src 'self' data: mp4: *;");
-	context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
+    context.Response.Headers.Add("Content-Security-Policy", "media-src 'self' data: mp4: *;");
+    context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
     context.Response.Headers.Add("Referrer-Policy", "no-referrer");
     await next();
 });
