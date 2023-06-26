@@ -3,6 +3,8 @@ using ChatView.Models.ChatView;
 using Microsoft.AspNetCore.SignalR;
 using Moq;
 using NUnit.Framework;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace ChatView_Tests
 {
@@ -16,15 +18,20 @@ namespace ChatView_Tests
         private Mock<HubCallerContext> contextMock;
         private Mock<IHubCallerClients> clientsMock;
 
+
         public ChatViewHubTests()
         {
             hub = new ChatViewHub();
             contextMock = new Mock<HubCallerContext>();
             clientsMock = new Mock<IHubCallerClients>();
             hub.Context = contextMock.Object;
-            hub.Clients = clientsMock.Object;   
+            hub.Clients = clientsMock.Object;
         }
-
+            
+        /// <summary>
+        /// Check if the JoinRoom method adds a new room to the list of rooms
+        /// </summary>
+        /// <returns></returns>
         [Fact]
         public async Task JoinRoom_NewRoom_RoomAdded()
         {
@@ -44,9 +51,13 @@ namespace ChatView_Tests
             NUnit.Framework.Assert.That(hub.Rooms[0].Clients.Count, Is.EqualTo(1));
             NUnit.Framework.Assert.That(hub.Rooms[0].Clients[0].Username, Is.EqualTo(username));
             NUnit.Framework.Assert.That(hub.Rooms[0].Clients[0].Role, Is.EqualTo(ChatView.Models.ChatView.Roles.Admin));
-
         }
 
+
+        /// <summary>
+        /// Check if the JoinRoom method adds a new client to an existing room
+        /// </summary>
+        /// <returns></returns>
         [Fact]
         public async Task JoinRoom_ExistingRoom_ClientAdded()
         {

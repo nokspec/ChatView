@@ -21,6 +21,7 @@ namespace ChatView.Hubs
         public List<Room> Rooms = new();
         public ConcurrentDictionary<Client, Room> ClientRoomDictionary = new();
         private static readonly ConcurrentDictionary<string, string> Users = new();
+    
 
         /// <summary>
         /// If a user creates a room, create new entry, otherwise add the user to the corresponding room
@@ -374,8 +375,6 @@ namespace ChatView.Hubs
         {
             await LeaveRoom(); //remove the user from the room.
             await base.OnDisconnectedAsync(ex);
-            Console.WriteLine("User dcd");
-            
         }
 
         /// <summary>
@@ -385,22 +384,20 @@ namespace ChatView.Hubs
         /// <returns></returns>
         public async Task SendMessage(string message)
         {
-            var user = ClientRoomDictionary.FirstOrDefault(x => x.Key.ConnectionId == Context.ConnectionId);
+            var user = await GetClient();
 
-            if (!user.Key.Muted)
+            if (!user.Muted)
             {
                 var room = await GetRoom();
                 if (room != null)
                 {
-                    await Clients.Group(room.RoomCode).SendAsync("ReceiveMessage", user.Key.Username, message);
+                    await Clients.Group(room.RoomCode).SendAsync("ReceiveMessage", user.Username, message);
                 }
             }
             else
             {
-                await Clients.Clients(user.Key.ConnectionId).SendAsync("UserMuted");
+                await Clients.Clients(user.ConnectionId).SendAsync("UserMuted");
             }
         }
-
-
     }
 }
